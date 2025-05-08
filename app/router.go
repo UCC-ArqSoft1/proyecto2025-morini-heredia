@@ -10,6 +10,20 @@ var (
 	router *gin.Engine
 )
 
+/*
+	frontend:
+	https://localhost:5001/home
+	https://localhost:5001/login
+	https://localhost:5001/signup
+	https://localhost:5001/activities
+
+	backend:
+	https://localhost:8080/actividades
+	https://localhost:8080/actividades/{id}
+	https://localhost:8080/usuarios
+	https://localhost:8080/usuarios/{id}
+*/
+
 func init() {
 	router = gin.Default()
 	router.Use(cors.Default())
