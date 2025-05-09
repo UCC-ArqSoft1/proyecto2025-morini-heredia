@@ -1,14 +1,16 @@
 package model
 
 type Actividad struct {
-	Id          int
-	Titulo      string
-	Descripcion string
-	Cupo        int
-	// instructor
-	// categoria
+	ID          uint   `gorm:"primaryKey;autoIncrement"`
+	Titulo      string `gorm:"type:varchar(100);not null"`
+	Descripcion string `gorm:"type:text"`
+	Cupo        uint   `gorm:"type:int;not null"`
+	Dia         string `gorm:"type:enum('Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo');not null'"`
+	Categoria   string `gorm:"type:varchar(24);not null"`
 
-	Usuarios Usuarios
+	InstructorID uint       `gorm:"not null"` // Clave foránea para Instructor
+	Instructor   Instructor `gorm:"foreignKey:InstructorId"`
+	// Usuarios se maneja a través de Inscripcion (muchos-a-muchos)
 }
 
 type Actividades []Actividad

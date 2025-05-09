@@ -3,16 +3,16 @@ package model
 import "time"
 
 type Usuario struct {
-	Id            int
-	Nombre        string
-	Apellido      string
-	Email         string
-	UserName      string
-	Password      string `gorm:"not null" json:"-"` // no expone la contraseña en el JSON
-	Rol           string
-	FechaRegistro time.Time
+	ID            uint      `gorm:"primaryKey;autoIncrement"`
+	Nombre        string    `gorm:"type:varchar(100);not null"`
+	Apellido      string    `gorm:"type:varchar(100);not null"`
+	UserName      string    `gorm:"type:varchar(50);unique;not null"`
+	Password      string    `gorm:"type:varchar(255);not null" json:"-"` // no expone la contraseña en el JSON
+	Rol           string    `gorm:"type:enum('socio','admin');not null;default:'socio'"`
+	FechaRegistro time.Time `gorm:"type:timestamp;not null;default:CURRENT_TIMESTAMP"`
 
-	Actividades Actividades
+	// Relación muchos-a-muchos (a través de Inscripcion)
+	Actividades []Actividad `gorm:"many2many:inscripciones;"`
 }
 
 type Usuarios []Usuario
