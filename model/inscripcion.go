@@ -7,11 +7,11 @@ type Inscripcion struct {
 	Fecha_inscripcion  time.Time `gorm:"type:timestamp;not null;default:CURRENT_TIMESTAMP"`
 	Estado_inscripcion string    `gorm:"type:enum('activa','inactiva');not null;default:'activa'"`
 
-	Usuario_iD   uint `gorm:"not null"` // FK a Usuario
-	Actividad_iD uint `gorm:"not null"` // FK a Actividad
+	Usuario_id   uint `gorm:"not null"` // FK a Usuario
+	Actividad_id uint `gorm:"not null"` // FK a Actividad
 
-	Usuario   Usuario   `gorm:"foreignKey:UsuarioId"`
-	Actividad Actividad `gorm:"foreignKey:ActividadId"`
+	Usuario   Usuario   `gorm:"foreignKey:usuario_id"`
+	Actividad Actividad `gorm:"foreignKey:actividad_id"`
 }
 
 type Inscripciones []Inscripcion
