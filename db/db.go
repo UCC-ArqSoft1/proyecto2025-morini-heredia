@@ -3,6 +3,7 @@ package db
 import (
 	"fmt"
 	"os"
+	"proyecto-integrador/model"
 
 	log "github.com/sirupsen/logrus"
 	"gorm.io/driver/mysql"
@@ -17,6 +18,7 @@ var (
 	db_user   string
 	db_pass   string
 	db_host   string
+	db_port   string
 	db_schema string
 
 	once sync.Once
@@ -27,9 +29,10 @@ func GetInstance() *gorm.DB {
 		db_user = os.Getenv("DB_USER")
 		db_pass = os.Getenv("DB_PASS")
 		db_host = os.Getenv("DB_HOST")
+		db_port = os.Getenv("DB_PORT")
 		db_schema = os.Getenv("DB_SCHEMA")
 
-		dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", db_user, db_pass, db_host, db_schema)
+		dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", db_user, db_pass, db_host, db_port, db_schema)
 
 		var err error
 		db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
@@ -45,6 +48,11 @@ func GetInstance() *gorm.DB {
 }
 
 func StartDbEngine() {
+	db.AutoMigrate(&model.Actividad{})
+	db.AutoMigrate(&model.Inscripcion{})
+	db.AutoMigrate(&model.Usuario{})
+	log.Info("Terminada la migracion de las tablas")
+
 	// creamos la conexión
 	GetInstance()
 }
