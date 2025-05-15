@@ -15,8 +15,7 @@ type Actividad struct {
 	Instructor    Instructor `gorm:"foreignKey:instructor_id"`
 	// Usuarios se maneja a través de Inscripcion (muchos-a-muchos)c
 
-	Categoria_id uint      `gorm:"not null"` // Clave foránea para Instructor
-	Categoria    Categoria `gorm:"foreignKey:categoria_id"`
+	Categoria string `gorm:"type:varchar(24)"`
 }
 
 type Actividades []Actividad

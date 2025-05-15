@@ -11,11 +11,13 @@ import (
 
 var db_conn *gorm.DB = db.GetInstance()
 
-func GetActividades(params map[string]any) (model.Actividades, error) {
+func GetActividadesByParams(params map[string]any) model.Actividades {
 	var actividades model.Actividades
-
 	query := db_conn.Model(&model.Actividad{})
 
+	if params["id"] != "" {
+		query = query.Where("id = ?", params["id"])
+	}
 	if params["titulo"] != "" {
 		query = query.Where("titulo LIKE ?", fmt.Sprintf("%%%s%%", params["titulo"]))
 	}
@@ -26,8 +28,14 @@ func GetActividades(params map[string]any) (model.Actividades, error) {
 		query = query.Where("categoria LIKE ?", fmt.Sprintf("%%%s%%", params["categoria"]))
 	}
 
-	err := query.Find(&actividades).Error
-	return actividades, err
+	var err error = query.Find(&actividades).Error
+	if err != nil {
+		log.Error("Error al buscar actividades: ", err)
+	}
+
+	log.Debug("Actividades: ", actividades)
+
+	return actividades
 }
 
 func GetActividadById(id int) model.Actividad {
