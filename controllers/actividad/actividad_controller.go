@@ -44,7 +44,7 @@ func GetActividadById(ctx *gin.Context) {
 	actividad, err := services.ActividadService.GetActividadByID(id_actividad)
 	if err != nil {
 		log.Error("Error al buscar actividad:", err)
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "La actividad no existe"})
+		ctx.JSON(404, gin.H{"error": "La actividad no existe"})
 		return
 	}
 

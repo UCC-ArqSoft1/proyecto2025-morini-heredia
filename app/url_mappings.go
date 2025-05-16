@@ -17,70 +17,116 @@ import (
 )
 
 /*
-backend:
+INICIO DE SESION/CREACION DE USUARIO:
+	POST https://localhost:8080/login
+		http_status: 201, 400, 401, 500
+		body: {
+			"username": "string",
+			"password": "string"
+		}
+		respose: {
+			"access_token": "TOKEN",
+		}
 
-GET https://localhost:8080/actividades
-GET https://localhost:8080/actividades/:id
-GET https://localhost:8080/actividades/buscar?{id,titulo,horario,categoria}
-GET https://localhost:8080/actividades/:id?
+	POST https://localhost:8080/signup
+		http_status: 201, 400, 500
+		body: {
+			"nombre": "string",
+			"apellido": "string",
+			"email": "string",
+			"telefono": "string"
+			"username": "string",
+			"password": "string"
+		}
 
-	body: -
 
-GET https://localhost:8080/usuarios?id
-GET https://localhost:8080/usuarios/actividades
-POST https://localhost:8080/login
+ADMINISTRACION DE LOS MODELOS:
 
-	body: {
-		"username": "string",
-		"password": "string"
-	}
+	GET https://localhost:8080/actividades
+		http_status: 200, 500
+		response: {
+			"actividades": [
+				{
+					"id": "int",
+					"titulo": "string", ...
+				}
+			]
+		}
+	GET https://localhost:8080/actividades/buscar?{id,titulo,horario,categoria}
+		http_status: 200, 500
+		response: {
+			"actividades": [
+				{
+					"id": "int",
+					"titulo": "string", ...
+				}
+			]
+		}
+	GET https://localhost:8080/actividades/:id_actividad
+		http_status: 200, 404, 400, 500
+		response:
+			{
+				"id": "int",
+				"titulo": "string", ...
+			}
+	// TODO: según la consigna para consultar actividades de un socio no se requiere autenticación, preguntar si está bien (sería muy raro)
+	GET https://localhost:8080/usuarios/actividades
+		http_status: 200, 401, 500
+		header: autorization:bearer TOKEN
+		response: {
+			"actividades": [
+				{
+					"id": "int",
+					"titulo": "string", ...
+				}
+			]
+		}
+	POST https://localhost:8080/inscripciones/:actividad_id
+		status: 201, 404, 401, 500
+		header: autorization:bearer TOKEN       //TODO: preguntar si esta bien (buscar al usuario usando contenido del token) y consultar como buscar al usuario
+		body: {
+			"estado_inscripcion": "string"
+		}
+	DELETE https://localhost:8080/inscripciones/:actividad_id  // Permitir que un usuario elimine su inscripción en una actividad
+		http_status: 204, 404, 401, 500
+		header: autorization:bearer TOKEN
+		body: {
+			"usuario_id": "int"
+		}
 
-POST https://localhost:8080/signup
 
-	body: {
-		"nombre": "string",
-		"apellido": "string",
-		"email": "string",
-		"telefono": "string"
-		"username": "string",
-		"password": "string"
-	}
+ENDPOINTS PARA EL ADMINISTRADOR:
 
-POST https://localhost:8080/actividades Crear una actividad (Admin)
+	Crear una actividad
+	POST https://localhost:8080/actividades (Admin)
+		http_status: 201, 400, 401, 403, 500
+		header: autorization:bearer TOKEN
+		body: {
+			"titulo": "string",
+			"descripcion": "string",
+			"cupo": "int",
+			"dia": "string",
+			"horario_inicio": "timestamp",
+			"horario_final": "timestamp",
+			"instructor_id": "int",
+			"categoria": "string"
+		}
 
-	body: {
-  		"titulo": "string",
-  		"descripcion": "string",
-  		"cupo": "int",
-  		"dia": "string",
-  		"horario_inicio": "timestamp",
-  		"horario_final": "timestamp",
-  		"instructor_id": "int",
-  		"categoria": "string"
-}
+	Actualizar una actividad
+	PUT https://localhost:8080/actividades/:id (Admin)
+		http_status: 200, 400, 401, 403, 500
+		header: autorization:bearer TOKEN
+		body: {
+			"titulo": "string",
+			"descripcion": "string",
+			"cupo": "int",
+		}
+		response: <BODY>
 
-PUT https://localhost:8080/actividades/:id
-	body: {
-		"titulo": "string",
-  		"descripcion": "string",
-  		"cupo": "int",
-	}
-
-DELETE https://localhost:8080/actividades/:id //TODO: preguntar porque al eliminar actividad, la inscripcion queda, ¿como se saca?
-	
-
-POST https://localhost:8080/inscripcion/:actividad_id 
-
-	header: autorization:bearer TOKEN       //TODO: preguntar si esta bien y consultar como buscar al usuario
-	body: {
-		"estado_inscripcion": "string"
-	}
-
-DELETE https://localhost:8080/inscripcion/:actividad_id  // Permitir que un usuario elimine su inscripción en una actividad
-	body: {
-  		"usuario_id": "int"
-	}
-
+	Borrar una actividad
+	DELETE https://localhost:8080/actividades/:id (Admin) //TODO: preguntar porque al eliminar actividad, la inscripcion queda, ¿como se saca?
+		http_status: 204, 404, 401, 403, 500 // TODO: no se si iba 404 con el metodo DELETE
+		header: autorization:bearer TOKEN
 */
 
 func login(ctx *gin.Context) {

@@ -4,13 +4,12 @@ import (
 	"fmt"
 	"os"
 	"proyecto-integrador/model"
+	"sync"
 
 	log "github.com/sirupsen/logrus"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-
-	"sync"
 )
 
 var (
@@ -21,11 +20,15 @@ var (
 	db_port   string
 	db_schema string
 
-	once sync.Once
+	iniciar_conexion sync.Once
 )
 
 func GetInstance() *gorm.DB {
-	once.Do(func() {
+	return db
+}
+
+func StartDbEngine() {
+	iniciar_conexion.Do(func() {
 		db_user = os.Getenv("DB_USER")
 		db_pass = os.Getenv("DB_PASS")
 		db_host = os.Getenv("DB_HOST")
@@ -33,6 +36,7 @@ func GetInstance() *gorm.DB {
 		db_schema = os.Getenv("DB_SCHEMA")
 
 		dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", db_user, db_pass, db_host, db_port, db_schema)
+		log.Info("Conectando a la base de datos con dsn: ", dsn)
 
 		var err error
 		db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
@@ -42,17 +46,10 @@ func GetInstance() *gorm.DB {
 			log.Fatalf("Error al conectar a la base de datos: %v", err)
 		}
 		log.Info("Conexion a base de datos establecida")
+
+		db.AutoMigrate(&model.Actividad{})
+		db.AutoMigrate(&model.Inscripcion{})
+		db.AutoMigrate(&model.Usuario{})
+		log.Info("Terminada la migracion de las tablas")
 	})
-
-	return db
-}
-
-func StartDbEngine() {
-	db.AutoMigrate(&model.Actividad{})
-	db.AutoMigrate(&model.Inscripcion{})
-	db.AutoMigrate(&model.Usuario{})
-	log.Info("Terminada la migracion de las tablas")
-
-	// creamos la conexión
-	GetInstance()
 }

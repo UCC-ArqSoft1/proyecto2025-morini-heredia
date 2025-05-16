@@ -6,14 +6,11 @@ import (
 	"proyecto-integrador/model"
 
 	log "github.com/sirupsen/logrus"
-	"gorm.io/gorm"
 )
-
-var db_conn *gorm.DB = db.GetInstance()
 
 func GetActividadesByParams(params map[string]any) model.Actividades {
 	var actividades model.Actividades
-	query := db_conn.Model(&model.Actividad{})
+	query := db.GetInstance().Model(&model.Actividad{})
 
 	if params["id"] != "" {
 		query = query.Where("id = ?", params["id"])
@@ -40,7 +37,7 @@ func GetActividadesByParams(params map[string]any) model.Actividades {
 
 func GetActividadById(id int) model.Actividad {
 	var actividad model.Actividad
-	db_conn.Where("id = ?", id).First(&actividad)
+	db.GetInstance().Where("id = ?", id).First(&actividad)
 
 	log.Debug("Actividad: ", actividad)
 
@@ -49,7 +46,7 @@ func GetActividadById(id int) model.Actividad {
 
 func GetAllActividades() model.Actividades {
 	var actividades model.Actividades
-	db_conn.Find(&actividades)
+	db.GetInstance().Find(&actividades)
 
 	log.Debug("Actividades: ", actividades)
 
