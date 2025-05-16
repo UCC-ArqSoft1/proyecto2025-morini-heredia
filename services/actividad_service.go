@@ -9,14 +9,14 @@ import (
 
 type actividadService struct{}
 
-type actividadServiceInterface interface {
+type IactividadService interface {
 	GetAllActividades() (dto.ActividadesMinDTO, error)
 	GetActividadesByParams(params map[string]any) (dto.ActividadesMinDTO, error)
 	GetActividadByID(id int) (dto.ActividadDTO, error)
 }
 
 var (
-	ActividadService actividadServiceInterface
+	ActividadService IactividadService
 )
 
 func init() {

@@ -4,14 +4,14 @@ import (
 	"proyecto-integrador/db"
 	"proyecto-integrador/model"
 
-	"gorm.io/gorm"
+	log "github.com/sirupsen/logrus"
 )
 
-var db_conn *gorm.DB = db.GetInstance()
-
-func GetUsuarioByUsername(username string) (model.Usuario, error) {
+func GetUsuarioByUsername(username string) model.Usuario {
 	var usuario model.Usuario
-	err := db_conn.Where("username = ?", username).First(&usuario).Error
+	db.GetInstance().Where("username = ?", username).First(&usuario)
 
-	return usuario, err
+	log.Debug("Usuario: ", usuario)
+
+	return usuario
 }

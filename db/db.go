@@ -24,10 +24,6 @@ var (
 )
 
 func GetInstance() *gorm.DB {
-	return db
-}
-
-func StartDbEngine() {
 	iniciar_conexion.Do(func() {
 		db_user = os.Getenv("DB_USER")
 		db_pass = os.Getenv("DB_PASS")
@@ -46,10 +42,17 @@ func StartDbEngine() {
 			log.Fatalf("Error al conectar a la base de datos: %v", err)
 		}
 		log.Info("Conexion a base de datos establecida")
-
-		db.AutoMigrate(&model.Actividad{})
-		db.AutoMigrate(&model.Inscripcion{})
-		db.AutoMigrate(&model.Usuario{})
-		log.Info("Terminada la migracion de las tablas")
 	})
+
+	return db
+}
+
+func StartDbEngine() {
+	// iniciamos el pool de conexiónes
+	GetInstance()
+
+	db.AutoMigrate(&model.Actividad{})
+	db.AutoMigrate(&model.Inscripcion{})
+	db.AutoMigrate(&model.Usuario{})
+	log.Info("Terminada la migracion de las tablas")
 }
