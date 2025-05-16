@@ -22,6 +22,7 @@ backend:
 GET https://localhost:8080/actividades
 GET https://localhost:8080/actividades/:id
 GET https://localhost:8080/actividades/buscar?{id,titulo,horario,categoria}
+GET https://localhost:8080/actividades/:id?
 
 	body: -
 
@@ -65,19 +66,20 @@ PUT https://localhost:8080/actividades/:id
   		"cupo": "int",
 	}
 
-DELETE https://localhost:8080/actividades/:id // TODO: preguntar porque al eliminar actividad, la inscripcion queda, ¿como se saca?
+DELETE https://localhost:8080/actividades/:id //TODO: preguntar porque al eliminar actividad, la inscripcion queda, ¿como se saca?
 	
 
-POST https://localhost:8080/inscripcion/:actividad_id
+POST https://localhost:8080/inscripcion/:actividad_id 
 
-	header: autorization:bearer TOKEN       // TODO: preguntar si esta bien
+	header: autorization:bearer TOKEN       //TODO: preguntar si esta bien y consultar como buscar al usuario
 	body: {
-		"estado_inscripcion": "string",
-		"fecha_inscripcion": "time",
-  		"usuario_id": "int"
+		"estado_inscripcion": "string"
 	}
 
-
+DELETE https://localhost:8080/inscripcion/:actividad_id  // Permitir que un usuario elimine su inscripción en una actividad
+	body: {
+  		"usuario_id": "int"
+	}
 
 */
 
