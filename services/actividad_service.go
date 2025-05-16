@@ -35,7 +35,7 @@ func (s *actividadService) GetAllActividades() (dto.ActividadesMinDTO, error) {
 			Dia:         v.Dia,
 			HoraInicio:  v.Horario_inicio.Format("15:04"),
 			HoraFin:     v.Horario_final.Format("15:04"),
-			Instructor:  v.Instructor.Nombre,
+			Instructor:  v.Instructor,
 			Categoria:   v.Categoria,
 		}
 
@@ -57,7 +57,7 @@ func (s *actividadService) GetActividadesByParams(params map[string]any) (dto.Ac
 			Dia:         v.Dia,
 			HoraInicio:  v.Horario_inicio.Format("15:04"),
 			HoraFin:     v.Horario_final.Format("15:04"),
-			Instructor:  v.Instructor.Nombre,
+			Instructor:  v.Instructor,
 			Categoria:   v.Categoria,
 		}
 
@@ -81,7 +81,7 @@ func (s *actividadService) GetActividadByID(id int) (dto.ActividadDTO, error) {
 		Dia:         actividad.Dia,
 		HoraInicio:  actividad.Horario_inicio.Format("15:04"),
 		HoraFin:     actividad.Horario_final.Format("15:04"),
-		Instructor:  actividad.Instructor.Nombre,
+		Instructor:  actividad.Instructor,
 		Categoria:   actividad.Categoria,
 	}
 

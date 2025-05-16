@@ -10,8 +10,7 @@ type Actividad struct {
 	Dia            string    `gorm:"type:enum('Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo');not null'"`
 	Horario_inicio time.Time `gorm:"type:timestamp"`
 	Horario_final  time.Time `gorm:"type:timestamp"`
-	instructor    string `gorm:"type:varchar(100);not null"`
-
+	Instructor     string    `gorm:"type:varchar(100);not null"`
 
 	Categoria string `gorm:"type:varchar(24)"`
 }
