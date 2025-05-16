@@ -44,6 +44,41 @@ POST https://localhost:8080/signup
 		"username": "string",
 		"password": "string"
 	}
+
+POST https://localhost:8080/actividades Crear una actividad (Admin)
+
+	body: {
+  		"titulo": "string",
+  		"descripcion": "string",
+  		"cupo": "int",
+  		"dia": "string",
+  		"horario_inicio": "timestamp",
+  		"horario_final": "timestamp",
+  		"instructor_id": "int",
+  		"categoria": "string"
+}
+
+PUT https://localhost:8080/actividades/:id
+	body: {
+		"titulo": "string",
+  		"descripcion": "string",
+  		"cupo": "int",
+	}
+
+DELETE https://localhost:8080/actividades/:id // TODO: preguntar porque al eliminar actividad, la inscripcion queda, ¿como se saca?
+	
+
+POST https://localhost:8080/inscripcion/:actividad_id
+
+	header: autorization:bearer TOKEN       // TODO: preguntar si esta bien
+	body: {
+		"estado_inscripcion": "string",
+		"fecha_inscripcion": "time",
+  		"usuario_id": "int"
+	}
+
+
+
 */
 
 func login(ctx *gin.Context) {
