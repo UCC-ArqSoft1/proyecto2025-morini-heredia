@@ -32,7 +32,7 @@ INICIO DE SESION/CREACION DE USUARIO:
 ADMINISTRACION DE LOS MODELOS:
 
 	GET https://localhost:8080/actividades
-		http_status: 200, 500
+		http_status: 200, 400, 500
 		response: {
 			"actividades": [
 				{
@@ -58,7 +58,6 @@ ADMINISTRACION DE LOS MODELOS:
 				"id": "int",
 				"titulo": "string", ...
 			}
-	// TODO: según la consigna para consultar actividades de un socio no se requiere autenticación, preguntar si está bien (sería muy raro)
 	GET https://localhost:8080/usuarios/actividades
 		http_status: 200, 401, 500
 		header: autorization:bearer TOKEN
@@ -113,13 +112,12 @@ ENDPOINTS PARA EL ADMINISTRADOR:
 		response: <BODY>
 
 	Borrar una actividad
-	DELETE https://localhost:8080/actividades/:id (Admin) //TODO: preguntar porque al eliminar actividad, la inscripcion queda, ¿como se saca?
-		http_status: 204, 404, 401, 403, 500 // TODO: no se si iba 404 con el metodo DELETE
+	DELETE https://localhost:8080/actividades/:id (Admin)
+		http_status: 204, 404, 401, 403, 500
 		header: autorization:bearer TOKEN
 */
 
 func MapURLs() {
-	// TODO: capaz se puede hacer con un solo endpoint, y filtrar según si se pasan o no parametros
 	router.GET("/actividades", actividad.GetAllActividades)
 	router.GET("/actividades/:id", actividad.GetActividadById)
 	router.GET("/actividades/buscar", actividad.GetActividadesByParams)

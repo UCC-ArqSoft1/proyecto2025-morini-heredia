@@ -14,7 +14,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// TODO: ver si está bien crear el error acá, o si hay que deifnirlo en otro archivo
 var IncorrectCredentialsError = errors.New("Credenciales incorrectas")
 
 type usuarioService struct{}
