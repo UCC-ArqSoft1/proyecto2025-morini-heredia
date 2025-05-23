@@ -37,7 +37,7 @@ func (us *usuarioService) GenerateToken(username string, password string) (strin
 	hashedPassword := sha256.Sum256([]byte(password))
 	if hex.EncodeToString(hashedPassword[:]) != userdata.Password {
 		log.Debugf("Contraseña incorrecta para el usuario %s@%s\n", username, password)
-		log.Debugf("Hash ingresado: %s", hashedPassword)
+		log.Debugf("Hash ingresado: %s", hex.EncodeToString(hashedPassword[:]))
 		return "", IncorrectCredentialsError
 	}
 
