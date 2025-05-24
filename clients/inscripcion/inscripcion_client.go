@@ -7,12 +7,12 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func GetAllInscripciones(usuario_id uint) (model.Inscripciones, error) {
+func GetAllInscripciones(id_usuario uint) (model.Inscripciones, error) {
 	var inscripciones model.Inscripciones
 	query := db.GetInstance().Model(&model.Inscripcion{})
 
 	var err error
-	if err = query.Where("usuario_id = ?", usuario_id).Find(&inscripciones).Error; err != nil {
+	if err = query.Where("id_usuario = ?", id_usuario).Find(&inscripciones).Error; err != nil {
 		log.Error("Error al buscar inscripciones: ", err)
 		return nil, err
 	}

@@ -3,15 +3,15 @@ package model
 import "time"
 
 type Inscripcion struct {
-	Id                 uint      `gorm:"primaryKey;autoIncrement"`
-	Fecha_inscripcion  time.Time `gorm:"type:timestamp;not null;default:CURRENT_TIMESTAMP"`
-	Estado_inscripcion string    `gorm:"type:enum('activa','inactiva');not null;default:'activa'"`
+	Id               uint      `gorm:"column:id_inscripion;primaryKey;autoIncrement"`
+	FechaInscripcion time.Time `gorm:"column:fecha_inscripcion;type:timestamp;default:CURRENT_TIMESTAMP;not null"`
+	IsActiva         bool      `gorm:"column:is_activa;default:true;not null"`
 
-	Usuario_id   uint `gorm:"not null"` // FK a Usuario
-	Actividad_id uint `gorm:"not null"` // FK a Actividad
+	UsuarioId uint
+	Usuario   Usuario `gorm:"foreignKey:UsuarioId"`
 
-	Usuario   Usuario   `gorm:"foreignKey:usuario_id"`
-	Actividad Actividad `gorm:"foreignKey:actividad_id"`
+	ActividadId uint
+	Actividad   Actividad `gorm:"foreignKey:ActividadId"`
 }
 
 type Inscripciones []Inscripcion

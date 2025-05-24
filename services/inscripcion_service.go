@@ -30,9 +30,9 @@ func (is *inscripcionService) GetAllInscripciones(id_usuario uint) (dto.Inscripc
 	var resultado dto.InscripcionesDTO
 	for _, v := range inscripciones {
 		dto := dto.InscripcionDTO{
-			Id:                 v.Id,
-			Fecha_inscripcion:  v.Fecha_inscripcion,
-			Estado_inscripcion: v.Estado_inscripcion,
+			Id:               v.Id,
+			FechaInscripcion: v.FechaInscripcion,
+			IsActiva:         v.IsActiva,
 		}
 		resultado = append(resultado, dto)
 	}

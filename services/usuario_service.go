@@ -44,7 +44,7 @@ func (us *usuarioService) GenerateToken(username string, password string) (strin
 		"iss": "proyecto2025-morini-heredia",
 		"exp": time.Now().Add(30 * time.Minute).Unix(),
 		"sub": userdata.Username,
-		"rol": userdata.Rol,
+		"rol": userdata.IsAdmin,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 

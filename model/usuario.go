@@ -3,16 +3,15 @@ package model
 import "time"
 
 type Usuario struct {
-	Id             uint      `gorm:"primaryKey;autoIncrement"`
-	Nombre         string    `gorm:"type:varchar(100);not null"`
-	Apellido       string    `gorm:"type:varchar(100);not null"`
-	Username       string    `gorm:"type:varchar(50);unique;not null"`
-	Password       string    `gorm:"type:varchar(255);not null"` // no expone la contraseña en el JSON
-	Rol            string    `gorm:"type:enum('socio','admin');not null;default:'socio'"`
-	Fecha_registro time.Time `gorm:"type:timestamp;not null;default:CURRENT_TIMESTAMP"`
+	Id            uint      `gorm:"column:id_usuario;primaryKey;autoIncrement"`
+	Nombre        string    `gorm:"type:varchar(30);not null"`
+	Apellido      string    `gorm:"type:varchar(30);not null"`
+	Username      string    `gorm:"type:varchar(30);unique;not null"`
+	Password      string    `gorm:"type:char(64);collation:ascii_bin;not null"`
+	IsAdmin       bool      `gorm:"column:is_admin;default:false;not null"`
+	FechaRegistro time.Time `gorm:"column:fecha_registro;type:timestamp;default:CURRENT_TIMESTAMP;not null"`
 
-	// Relación muchos-a-muchos (a través de Inscripcion)
-	Actividades []Actividad `gorm:"many2many:inscripciones;"`
+	Inscripciones Inscripciones `gorm:"foreignKey:UsuarioId"`
 }
 
 type Usuarios []Usuario

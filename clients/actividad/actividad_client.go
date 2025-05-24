@@ -13,7 +13,7 @@ func GetActividadesByParams(params map[string]any) model.Actividades {
 	query := db.GetInstance().Model(&model.Actividad{})
 
 	if params["id"] != "" {
-		query = query.Where("id = ?", params["id"])
+		query = query.Where("id_actividad = ?", params["id"])
 	}
 	if params["titulo"] != "" {
 		query = query.Where("titulo LIKE ?", fmt.Sprintf("%%%s%%", params["titulo"]))
@@ -37,7 +37,7 @@ func GetActividadesByParams(params map[string]any) model.Actividades {
 
 func GetActividadById(id int) model.Actividad {
 	var actividad model.Actividad
-	db.GetInstance().Where("id = ?", id).First(&actividad)
+	db.GetInstance().Where("id_actividad = ?", id).First(&actividad)
 
 	log.Debug("Actividad: ", actividad)
 
