@@ -20,14 +20,16 @@ INSERT INTO actividads (id, titulo, descripcion, cupo, dia, horario_inicio, hora
 
 -- Inscripciones
 INSERT INTO inscripciones (usuario_id, actividad_id) VALUES
-  (2, 1),
-  (2, 4),
-  (4, 2),
-  (4, 5),
+  (9, 1),
+  (9, 4),
+  (8, 2),
+  (8, 5),
   (5, 1),
   (5, 2),
   (5, 3),
   (6, 3),
-  (7, 5)
+  (6, 5)
 ;
 
+insert into inscripcions (usuario_id, actividad_id) select * from inscripciones;
+update inscripcions set estado_inscripcion = 'inactiva' where id in (5,6,9);

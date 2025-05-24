@@ -14,8 +14,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-var IncorrectCredentialsError = errors.New("Credenciales incorrectas")
-
 type usuarioService struct{}
 
 type IUsuarioService interface {
@@ -23,6 +21,8 @@ type IUsuarioService interface {
 }
 
 var (
+	IncorrectCredentialsError = errors.New("Credenciales incorrectas")
+
 	UsuarioService IUsuarioService
 )
 
