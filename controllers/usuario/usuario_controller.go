@@ -12,7 +12,7 @@ import (
 
 func Login(ctx *gin.Context) {
 	var loginJSON dto.UsuarioLoginDTO
-	if err := ctx.ShouldBindJSON(&loginJSON); err != nil {
+	if err := ctx.BindJSON(&loginJSON); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Datos con formato incorrecto"})
 		log.Debug("LoginDTO:", loginJSON)
 		return

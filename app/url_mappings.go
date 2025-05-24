@@ -2,13 +2,14 @@ package app
 
 import (
 	"proyecto-integrador/controllers/actividad"
+	"proyecto-integrador/controllers/inscripcion"
 	"proyecto-integrador/controllers/usuario"
 )
 
 /*
 INICIO DE SESION/CREACION DE USUARIO:
 	POST https://localhost:8080/login
-		http_status: 201, 400, 401, 500
+		status: 201, 400, 401, 500
 		body: {
 			"username": "string",
 			"password": "string"
@@ -18,7 +19,7 @@ INICIO DE SESION/CREACION DE USUARIO:
 		}
 
 	POST https://localhost:8080/signup
-		http_status: 201, 400, 500
+		status: 201, 400, 500
 		body: {
 			"nombre": "string",
 			"apellido": "string",
@@ -31,63 +32,87 @@ INICIO DE SESION/CREACION DE USUARIO:
 
 ADMINISTRACION DE LOS MODELOS:
 
-	GET https://localhost:8080/actividades
-		http_status: 200, 400, 500
-		response: {
-			"actividades": [
-				{
-					"id": "int",
-					"titulo": "string", ...
-				}
-			]
-		}
-	GET https://localhost:8080/actividades/buscar?{id,titulo,horario,categoria}
-		http_status: 200, 500
-		response: {
-			"actividades": [
-				{
-					"id": "int",
-					"titulo": "string", ...
-				}
-			]
-		}
-	GET https://localhost:8080/actividades/:id_actividad
-		http_status: 200, 404, 400, 500
-		response:
-			{
-				"id": "int",
-				"titulo": "string", ...
+	ACTIVIDADES;
+		GET https://localhost:8080/actividades
+			status: 200, 400, 500
+			response: {
+				"actividades": [
+					{
+						"id": "int",
+						"titulo": "string", ...
+					}
+				]
 			}
-	GET https://localhost:8080/usuarios/actividades
-		http_status: 200, 401, 500
-		header: autorization:bearer TOKEN
-		response: {
-			"actividades": [
+		GET https://localhost:8080/actividades/buscar?{id,titulo,horario,categoria}
+			status: 200, 500
+			response: {
+				"actividades": [
+					{
+						"id": "int",
+						"titulo": "string", ...
+					}
+				]
+			}
+		GET https://localhost:8080/actividades/:id_actividad
+			status: 200, 404, 400, 500
+			response:
 				{
 					"id": "int",
 					"titulo": "string", ...
 				}
-			]
-		}
-	POST https://localhost:8080/inscripciones/:actividad_id
-		status: 201, 404, 401, 500
-		header: autorization:bearer TOKEN
-		body: {
-			"estado_inscripcion": "string"
-		}
-	DELETE https://localhost:8080/inscripciones/:actividad_id  // Permitir que un usuario elimine su inscripción en una actividad
-		http_status: 204, 404, 401, 500
-		header: autorization:bearer TOKEN
-		body: {
-			"usuario_id": "int"
-		}
+
+	USUARIOS:
+		GET https://localhost:8080/usuarios/actividades
+			status: 200, 401, 500
+			header: autorization:bearer TOKEN
+			response: {
+				"actividades": [
+					{
+						"id": "int",
+						"titulo": "string", ...
+					}
+				]
+			}
+
+	INCSRIPCIONES:
+		GET https://localhost:8080/inscripciones
+			status: 200, 401, 500
+			header: autorization:bearer TOKEN
+			response: {
+				"inscripciones": [
+					{
+						"id": int,
+						"fecha_inscripcion": string,
+						"estado_inscripcion": string,
+						...
+					}, ...
+				]
+			}
+		POST https://localhost:8080/inscripciones
+			status: 201, 401, 404, 500
+			header: autorization:bearer TOKEN
+			body: {
+				"id": int					// id de la actividad
+			}
+			response: {
+				"id": int					// id de la inscripcion
+			}
+
+		// TODO: preguntar si se debe usar PATCH en lugar de DELETE (sino usamos PUT)
+		PATCH https://localhost:8080/inscripciones  // Permitir que un usuario elimine su inscripción en una actividad
+			status: 204, 404, 401, 500
+			header: autorization:bearer TOKEN
+			body: {
+				"id": int,
+				"estado_inscripcion": string
+			}
 
 
 ENDPOINTS PARA EL ADMINISTRADOR:
 
 	Crear una actividad
 	POST https://localhost:8080/actividades (Admin)
-		http_status: 201, 400, 401, 403, 500
+		status: 201, 400, 401, 403, 500
 		header: autorization:bearer TOKEN
 		body: {
 			"titulo": "string",
@@ -102,7 +127,7 @@ ENDPOINTS PARA EL ADMINISTRADOR:
 
 	Actualizar una actividad
 	PUT https://localhost:8080/actividades/:id (Admin)
-		http_status: 200, 400, 401, 403, 500
+		status: 200, 400, 401, 403, 500
 		header: autorization:bearer TOKEN
 		body: {
 			"titulo": "string",
@@ -113,14 +138,23 @@ ENDPOINTS PARA EL ADMINISTRADOR:
 
 	Borrar una actividad
 	DELETE https://localhost:8080/actividades/:id (Admin)
-		http_status: 204, 404, 401, 403, 500
+		status: 204, 404, 401, 403, 500
 		header: autorization:bearer TOKEN
 */
 
 func MapURLs() {
+	// actividades
 	router.GET("/actividades", actividad.GetAllActividades)
 	router.GET("/actividades/:id", actividad.GetActividadById)
 	router.GET("/actividades/buscar", actividad.GetActividadesByParams)
 
+	// usuarios
 	router.POST("/login", usuario.Login)
+
+	// inscripciones
+	router.GET("/inscripciones", inscripcion.GetAllInscripciones)
+
+	router.POST("/inscripciones", inscripcion.InscribirUsuario)
+
+	router.PATCH("/inscripciones", inscripcion.ActualizarUsuario)
 }
