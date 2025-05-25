@@ -4,7 +4,6 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"errors"
-	"fmt"
 	"os"
 	"proyecto-integrador/clients/usuario"
 	"proyecto-integrador/model"
@@ -18,16 +17,20 @@ type usuarioService struct{}
 
 type IUsuarioService interface {
 	GenerateToken(username string, password string) (string, error)
+	ValidateToken(tokenString string) (uint, error)
 }
 
 var (
 	IncorrectCredentialsError = errors.New("Credenciales incorrectas")
 
 	UsuarioService IUsuarioService
+	jwtSecret      string
 )
 
 func init() {
 	UsuarioService = &usuarioService{}
+
+	jwtSecret = os.Getenv("JWT_SECRET")
 }
 
 func (us *usuarioService) GenerateToken(username string, password string) (string, error) {
@@ -41,18 +44,37 @@ func (us *usuarioService) GenerateToken(username string, password string) (strin
 	}
 
 	claims := jwt.MapClaims{
-		"iss": "proyecto2025-morini-heredia",
-		"exp": time.Now().Add(30 * time.Minute).Unix(),
-		"sub": userdata.Username,
-		"rol": userdata.IsAdmin,
+		"iss":        "proyecto2025-morini-heredia",
+		"exp":        time.Now().Add(30 * time.Minute).Unix(),
+		"username":   userdata.Username,
+		"id_usuario": userdata.Id,
+		"is_admin":   userdata.IsAdmin,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	secret := os.Getenv("JWT_SECRET")
-	if secret == "" {
-		log.Error("La variable de entorno JWT_SECRET esta vacia")
-		return "", fmt.Errorf("La variable de entorno JWT_SECRET esta vacia")
+	return token.SignedString([]byte(jwtSecret))
+}
+
+func (us *usuarioService) ValidateToken(tokenString string) (uint, error) {
+	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
+		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, jwt.ErrSignatureInvalid
+		}
+		return []byte(jwtSecret), nil
+	})
+	if err != nil || !token.Valid {
+		return 0, err
 	}
 
-	return token.SignedString([]byte(secret))
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return 0, errors.New("Error al obtener los claims")
+	}
+
+	rawId, ok := claims["id_usuario"].(float64)
+	if !ok {
+		return 0, errors.New("Error al obtener el id_usuario de los claims")
+	}
+
+	return uint(rawId), nil
 }

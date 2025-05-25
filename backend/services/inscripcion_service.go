@@ -41,7 +41,12 @@ func (is *inscripcionService) GetAllInscripciones(id_usuario uint) (dto.Inscripc
 }
 
 func (is *inscripcionService) InscribirUsuario(id_usuario, actividad_id uint) (uint, error) {
-	return 0, nil
+	_, err := inscripcion.InsertarInscripcion(id_usuario, actividad_id)
+	if err != nil {
+		return 0, err
+	}
+
+	return id_usuario, nil
 }
 
 func (is *inscripcionService) DesinscribirUsuario() error {

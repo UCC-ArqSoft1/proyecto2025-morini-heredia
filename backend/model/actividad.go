@@ -13,7 +13,7 @@ type Actividad struct {
 	Instructor    string    `gorm:"type:varchar(50);not null"`
 	Categoria     string    `gorm:"type:varchar(40);not null"`
 
-	Inscripciones Inscripciones `gorm:"foreignKey:ActividadId"`
+	Inscripciones Inscripciones `gorm:"foreignKey:IdActividad"`
 }
 
 type Actividades []Actividad

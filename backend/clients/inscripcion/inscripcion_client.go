@@ -22,16 +22,14 @@ func GetAllInscripciones(id_usuario uint) (model.Inscripciones, error) {
 	return inscripciones, nil
 }
 
-// func InsertarInscripcion(usuario_id, actividad_id uint) (model.Inscripcion, error) {
-// 	inscripcion := model.Inscripcion{
-// 		Usuario_id:         usuario_id,
-// 		Actividad_id:       actividad_id,
-// 		Estado_inscripcion: "activa",
-// 	}
+func InsertarInscripcion(id_usuario, id_actividad uint) (uint, error) {
+	insc := model.Inscripcion{
+		IdUsuario:   id_usuario,
+		IdActividad: id_actividad,
+	}
 
-// 	db.GetInstance().
-// 	return inscripcion, nil
-// }
+	return id_usuario, db.GetInstance().Create(&insc).Error
+}
 
 // func DesactivarInscripcion(insc model.Inscripcion) model.Inscripcion {
 

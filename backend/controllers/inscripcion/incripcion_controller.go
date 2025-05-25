@@ -1,43 +1,57 @@
 package inscripcion
 
 import (
+	"net/http"
+	"proyecto-integrador/dto"
 	"proyecto-integrador/services"
 
 	"github.com/gin-gonic/gin"
+
+	log "github.com/sirupsen/logrus"
 )
 
-// TODO: esto es para la entrega final
 func GetAllInscripciones(ctx *gin.Context) {
-	// userID, exists := ctx.Get("user_id")
-	// if !exists {
-	// 	ctx.JSON(401, gin.H{"error": "no autorizado"})
-	// }
-
-	inscripciones, err := services.InscripcionService.GetAllInscripciones(2)
-	if err != nil {
-		// errores van según si el usuario existe o no, por ahora solo dejo este
-		ctx.JSON(500, gin.H{"error": "error al procesar la consulta"})
+	userID, exists := ctx.Get("id_usuario")
+	if !exists {
+		log.Error("la variable 'id_usuario' no esta definida")
+		ctx.Status(http.StatusInternalServerError)
+		return
 	}
 
-	ctx.JSON(200, inscripciones)
+	inscripciones, err := services.InscripcionService.GetAllInscripciones(userID.(uint))
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "error al procesar la consulta"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, inscripciones)
 }
 
 func InscribirUsuario(ctx *gin.Context) {
-	// userID, _ := ctx.Get("user_id")
+	userID, exists := ctx.Get("id_usuario")
+	if !exists {
+		log.Error("la variable 'id_usuario' no esta definida")
+		ctx.Status(http.StatusInternalServerError)
+		return
+	}
 
-	// var actividad_id dto.IdDTO
-	// if err := ctx.BindJSON(&actividad_id); err != nil {
-	// 	ctx.JSON(http.StatusBadRequest, gin.H{"error": "Datos con formato incorrecto"})
-	// 	log.Debug("IdDTO:", actividad_id)
-	// 	return
-	// }
+	var idDTO dto.IdDTO
+	if err := ctx.BindJSON(&idDTO); err != nil {
+		log.Debug("IdDTO:", idDTO)
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Datos con formato incorrecto"})
+		return
+	}
 
-	// err := inscr
+	inscId, err := services.InscripcionService.InscribirUsuario(userID.(uint), idDTO.Id)
+	if err != nil {
+		log.Error(err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Error al inscribir al usuario"})
+		return
+	}
 
-	ctx.JSON(201, gin.H{"id": "420"})
+	ctx.JSON(http.StatusCreated, gin.H{"id": inscId})
 }
 
-// TODO: terminar de implementar
 func ActualizarUsuario(ctx *gin.Context) {
-	ctx.Status(204)
+	ctx.Status(http.StatusNoContent)
 }

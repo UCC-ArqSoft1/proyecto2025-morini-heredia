@@ -152,9 +152,9 @@ func MapURLs() {
 	router.POST("/login", usuario.Login)
 
 	// inscripciones
-	router.GET("/inscripciones", inscripcion.GetAllInscripciones)
+	router.GET("/inscripciones", JWTValidation, inscripcion.GetAllInscripciones)
 
-	router.POST("/inscripciones", inscripcion.InscribirUsuario)
+	router.POST("/inscripciones", JWTValidation, inscripcion.InscribirUsuario)
 
-	router.PATCH("/inscripciones", inscripcion.ActualizarUsuario)
+	router.PATCH("/inscripciones", JWTValidation, inscripcion.ActualizarUsuario)
 }

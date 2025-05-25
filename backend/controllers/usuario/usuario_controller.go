@@ -20,6 +20,7 @@ func Login(ctx *gin.Context) {
 
 	token, err := services.UsuarioService.GenerateToken(loginJSON.Username, loginJSON.Password)
 	if err != nil {
+		log.Debug(err)
 		if err == services.IncorrectCredentialsError {
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Credenciales incorrectas"})
 		} else {

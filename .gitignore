@@ -1,5 +1,5 @@
-backend/enunciado.pdf
-backend/.vscode
+enunciado.pdf
+.vscode
 backend/.env
 backend/proyecto-integrador
-backend/.commitmsg
+.commitmsg
