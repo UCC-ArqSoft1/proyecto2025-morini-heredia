@@ -7,6 +7,7 @@ const Header = ( ) => {
         localStorage.removeItem("isLoggedIn");
         navigate("/")
     }
+    
     return (
         <header>
             <h1>GYM</h1>
