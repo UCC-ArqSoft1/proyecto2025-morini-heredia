@@ -24,14 +24,18 @@ func JWTValidation(ctx *gin.Context) {
 		return
 	}
 
-	uid, err := services.UsuarioService.ValidateToken(parts[1])
+	tokenClaims, err := services.UsuarioService.GetClaimsFromToken(parts[1])
 	if err != nil {
 		log.Debug(err)
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "no autorizado"})
 		return
 	}
 
-	ctx.Set("id_usuario", uid)
+	idUser, _ := tokenClaims["id_usuario"].(float64)
+	isAdmin, _ := tokenClaims["is_admin"].(bool)
+
+	ctx.Set("id_usuario", uint(idUser))
+	ctx.Set("is_admin", isAdmin)
 	ctx.Next()
 }
 
