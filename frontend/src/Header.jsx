@@ -12,12 +12,12 @@ const Header = ( ) => {
     
     return (
         <header>
-            <div className="header-container"> {/* Clase para el header principal */}
-                <nav className="header-content"> {/* Clase para el contenido de la navegación */}
-                    <h1 className="header-title">GymPro</h1> {/* Clase para el título */}
-                    <div className="header-links"> {/* Clase para el contenedor de enlaces */}
+            <div className="header-container"> 
+                <nav className="header-content">
+                    <h1 className="header-title">GymPro</h1> 
+                    <div className="header-links"> 
                         <a href="/">Inicio</a>
-                        <a href="/actividades">Mis Actividades</a>
+                        <a href="/actividades">Actividades</a>
                         {isLoggedIn ? (
                             <button onClick={logout}>Cerrar sesión</button>
                         ) : (
@@ -25,7 +25,6 @@ const Header = ( ) => {
                         )}
                     </div>
                 </nav>
-                {/* Aquí iría tu "mas codigo" si pertenece al header */}
             </div>
         </header>
     );

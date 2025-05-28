@@ -29,6 +29,8 @@ body {
   min-width: 320px;
   min-height: 100vh;
   padding-top: 60px;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 h1 {

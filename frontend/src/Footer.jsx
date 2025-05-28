@@ -1,14 +1,14 @@
+import React from 'react'; 
+import './Footer.css'; 
+
 const Footer = () => {
-
-
     return (
-        <footer>
-            <p>
-                &copy; {new Date().getFullYear} My Website
+        <footer className="footer-container">
+            <p className="footer-text">
+                &copy; {new Date().getFullYear()} Copyright GymPro
             </p>
         </footer>
-
-    )
+    );
 }
 
 export default Footer;

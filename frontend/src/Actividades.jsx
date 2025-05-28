@@ -45,8 +45,10 @@ const Actividades = () => {
                         ))}
                     </ul>
                     {
-                      isLoggedIn && (
+                      isLoggedIn ? (
                         <button onClick={() => handleInscription(actividad.nombre)}>Inscribir</button>
+                      ) : (
+                        null
                       )
                     }
                 </div>
