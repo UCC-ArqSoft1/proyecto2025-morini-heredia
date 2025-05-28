@@ -17,7 +17,7 @@ type usuarioService struct{}
 
 type IUsuarioService interface {
 	GenerateToken(username string, password string) (string, error)
-	ValidateToken(tokenString string) (uint, error)
+	GetClaimsFromToken(tokenString string) (jwt.MapClaims, error)
 }
 
 var (
@@ -55,7 +55,7 @@ func (us *usuarioService) GenerateToken(username string, password string) (strin
 	return token.SignedString([]byte(jwtSecret))
 }
 
-func (us *usuarioService) ValidateToken(tokenString string) (uint, error) {
+func (us *usuarioService) GetClaimsFromToken(tokenString string) (jwt.MapClaims, error) {
 	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, jwt.ErrSignatureInvalid
@@ -63,18 +63,13 @@ func (us *usuarioService) ValidateToken(tokenString string) (uint, error) {
 		return []byte(jwtSecret), nil
 	})
 	if err != nil || !token.Valid {
-		return 0, err
+		return nil, err
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		return 0, errors.New("Error al obtener los claims")
+		return nil, errors.New("Error al obtener los claims")
 	}
 
-	rawId, ok := claims["id_usuario"].(float64)
-	if !ok {
-		return 0, errors.New("Error al obtener el id_usuario de los claims")
-	}
-
-	return uint(rawId), nil
+	return claims, nil
 }
