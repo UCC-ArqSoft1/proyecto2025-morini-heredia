@@ -30,7 +30,6 @@ body {
   min-height: 100vh;
   padding-top: 60px;
   overflow-x: hidden;
-  overflow-y: hidden;
 }
 
 h1 {
@@ -70,3 +69,10 @@ button:focus-visible {
   }
 }
 
+img-gym {
+  width: 100%;
+  display: flex;
+  top: 0;
+  left: 0;
+  
+}

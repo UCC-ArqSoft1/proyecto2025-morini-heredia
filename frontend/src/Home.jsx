@@ -1,8 +1,14 @@
+import './index.css'
+import gymPortada from './assets/maxresdefault.jpg'
+
 const Home = () => {
 
     return (
         <div>
-            <h2>En esta pagina podras encontrar info del gym</h2>
+            <img 
+            className="img-gym"
+            src={ gymPortada }></img>
+            <a type='buttom'>Inscribase ya  </a>
         </div>
     )
 
