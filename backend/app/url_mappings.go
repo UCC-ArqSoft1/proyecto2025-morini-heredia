@@ -156,5 +156,6 @@ func MapURLs() {
 
 	router.POST("/inscripciones", JWTValidation, inscripcion.InscribirUsuario)
 
-	router.PATCH("/inscripciones", JWTValidation, inscripcion.ActualizarUsuario)
+	// TODO: ¿que verbo usamos acá?
+	router.PUT("/inscripciones", JWTValidation, inscripcion.DesinscribirUsuario)
 }

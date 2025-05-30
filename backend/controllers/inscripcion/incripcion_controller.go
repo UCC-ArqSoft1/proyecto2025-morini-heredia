@@ -52,6 +52,28 @@ func InscribirUsuario(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{"id": inscId})
 }
 
-func ActualizarUsuario(ctx *gin.Context) {
+// TODO: implementar
+func DesinscribirUsuario(ctx *gin.Context) {
+	userID, exists := ctx.Get("id_usuario")
+	if !exists {
+		log.Error("la variable 'id_usuario' no esta definida")
+		ctx.Status(http.StatusInternalServerError)
+		return
+	}
+
+	var idDTO dto.IdDTO
+	if err := ctx.BindJSON(&idDTO); err != nil {
+		log.Debug("IdDTO:", idDTO)
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Datos con formato incorrecto"})
+		return
+	}
+
+	err := services.InscripcionService.DesinscribirUsuario(userID.(uint), idDTO.Id)
+	if err != nil {
+		log.Error(err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Error al inscribir al usuario"})
+		return
+	}
+
 	ctx.Status(http.StatusNoContent)
 }

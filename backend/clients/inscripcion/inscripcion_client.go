@@ -31,6 +31,7 @@ func InsertarInscripcion(id_usuario, id_actividad uint) (uint, error) {
 	return id_usuario, db.GetInstance().Create(&insc).Error
 }
 
-// func DesactivarInscripcion(insc model.Inscripcion) model.Inscripcion {
+// TODO: implementar
+func DesactivarInscripcion(id_inscripcion uint) model.Inscripcion {
 
-// }
+}

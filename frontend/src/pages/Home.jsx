@@ -1,5 +1,5 @@
-import './index.css'
-import gymPortada from './assets/maxresdefault.jpg'
+import gymPortada from './../assets/maxresdefault.jpg'
+import './../styles/index.css'
 
 const Home = () => {
 

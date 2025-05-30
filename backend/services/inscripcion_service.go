@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"proyecto-integrador/clients/inscripcion"
 	"proyecto-integrador/dto"
 )
@@ -9,8 +10,8 @@ type inscripcionService struct{}
 
 type IInscripcionService interface {
 	GetAllInscripciones(id_usuario uint) (dto.InscripcionesDTO, error)
-	InscribirUsuario(id_usuario, actividad_id uint) (uint, error)
-	DesinscribirUsuario() error
+	InscribirUsuario(id_usuario, id_actividad uint) (uint, error)
+	DesinscribirUsuario(id_usuario, id_actividad uint) error
 }
 
 var (
@@ -40,8 +41,8 @@ func (is *inscripcionService) GetAllInscripciones(id_usuario uint) (dto.Inscripc
 	return resultado, nil
 }
 
-func (is *inscripcionService) InscribirUsuario(id_usuario, actividad_id uint) (uint, error) {
-	_, err := inscripcion.InsertarInscripcion(id_usuario, actividad_id)
+func (is *inscripcionService) InscribirUsuario(id_usuario, id_actividad uint) (uint, error) {
+	_, err := inscripcion.InsertarInscripcion(id_usuario, id_actividad)
 	if err != nil {
 		return 0, err
 	}
@@ -49,7 +50,7 @@ func (is *inscripcionService) InscribirUsuario(id_usuario, actividad_id uint) (u
 	return id_usuario, nil
 }
 
-func (is *inscripcionService) DesinscribirUsuario() error {
-	return nil
-
+// TODO: implementar
+func (is *inscripcionService) DesinscribirUsuario(id_usuario, id_actividad uint) error {
+	return errors.New("IMPLEMENTAR LA FUNCIONALIDAD DE DESINSCRIBIR EL USUARIO")
 }
