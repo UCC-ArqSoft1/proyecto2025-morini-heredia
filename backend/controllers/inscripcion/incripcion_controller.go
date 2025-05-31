@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"proyecto-integrador/dto"
 	"proyecto-integrador/services"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 
@@ -45,7 +46,15 @@ func InscribirUsuario(ctx *gin.Context) {
 	inscId, err := services.InscripcionService.InscribirUsuario(userID.(uint), idDTO.Id)
 	if err != nil {
 		log.Error(err)
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Error al inscribir al usuario"})
+
+		// TODO: ver si se puede revisar de otra forma el error que no sea mediante strings
+		errString := strings.ToLower(err.Error())
+		if strings.Contains(errString, "error 1062") {
+			// if errors.Is(err, gorm.ErrDuplicatedKey) {
+			ctx.JSON(http.StatusConflict, gin.H{"error": "El usuario ya esta inscripto a esta actividad"})
+		} else {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Error al inscribir al usuario"})
+		}
 		return
 	}
 

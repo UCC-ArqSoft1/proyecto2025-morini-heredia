@@ -33,5 +33,5 @@ func InsertarInscripcion(id_usuario, id_actividad uint) (uint, error) {
 
 // TODO: implementar
 func DesactivarInscripcion(id_inscripcion uint) model.Inscripcion {
-
+	return model.Inscripcion{}
 }
