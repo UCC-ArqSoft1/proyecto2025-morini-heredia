@@ -22,15 +22,27 @@ func GetAllInscripciones(id_usuario uint) (model.Inscripciones, error) {
 	return inscripciones, nil
 }
 
-func InsertarInscripcion(id_usuario, id_actividad uint) (uint, error) {
+func AltaDeInscripcion(id_usuario, id_actividad uint) error {
 	insc := model.Inscripcion{
 		IdUsuario:   id_usuario,
 		IdActividad: id_actividad,
 	}
 
-	return id_usuario, db.GetInstance().Create(&insc).Error
+	result := db.GetInstance().Where(&insc).FirstOrCreate(&insc)
+	err := result.Error
+	if err != nil {
+		return err
+	}
+
+	// si el registro ya existe, actualizamos is_activa = 1
+	if result.RowsAffected == 0 {
+		return db.GetInstance().Model(&insc).Update("is_activa", true).Error
+	}
+
+	return nil
 }
 
-// func DesactivarInscripcion(insc model.Inscripcion) model.Inscripcion {
-
-// }
+func BajaDeInscripcion(id_usuario, id_actividad uint) error {
+	// hacemos una consulta tipo UPDATE a la base de datos
+	return db.GetInstance().Model(&model.Inscripcion{}).Where("id_usuario = ? AND id_actividad = ?", id_usuario, id_actividad).Update("is_activa", false).Error
+}

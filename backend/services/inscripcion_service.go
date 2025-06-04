@@ -9,8 +9,8 @@ type inscripcionService struct{}
 
 type IInscripcionService interface {
 	GetAllInscripciones(id_usuario uint) (dto.InscripcionesDTO, error)
-	InscribirUsuario(id_usuario, actividad_id uint) (uint, error)
-	DesinscribirUsuario() error
+	InscribirUsuario(id_usuario, id_actividad uint) error
+	DesinscribirUsuario(id_usuario, id_actividad uint) error
 }
 
 var (
@@ -30,7 +30,8 @@ func (is *inscripcionService) GetAllInscripciones(id_usuario uint) (dto.Inscripc
 	var resultado dto.InscripcionesDTO
 	for _, v := range inscripciones {
 		dto := dto.InscripcionDTO{
-			Id:               v.Id,
+			IdUsuario:        v.IdUsuario,
+			IdActividad:      v.IdActividad,
 			FechaInscripcion: v.FechaInscripcion,
 			IsActiva:         v.IsActiva,
 		}
@@ -40,16 +41,10 @@ func (is *inscripcionService) GetAllInscripciones(id_usuario uint) (dto.Inscripc
 	return resultado, nil
 }
 
-func (is *inscripcionService) InscribirUsuario(id_usuario, actividad_id uint) (uint, error) {
-	_, err := inscripcion.InsertarInscripcion(id_usuario, actividad_id)
-	if err != nil {
-		return 0, err
-	}
-
-	return id_usuario, nil
+func (is *inscripcionService) InscribirUsuario(id_usuario, id_actividad uint) error {
+	return inscripcion.AltaDeInscripcion(id_usuario, id_actividad)
 }
 
-func (is *inscripcionService) DesinscribirUsuario() error {
-	return nil
-
+func (is *inscripcionService) DesinscribirUsuario(id_usuario, id_actividad uint) error {
+	return inscripcion.BajaDeInscripcion(id_usuario, id_actividad)
 }
