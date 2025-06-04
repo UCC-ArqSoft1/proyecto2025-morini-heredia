@@ -52,3 +52,15 @@ func GetAllActividades() model.Actividades {
 
 	return actividades
 }
+
+func DeleteActividad(id uint) error {
+	result := db.GetInstance().Delete(&model.Actividad{}, id)
+	if result.Error != nil {
+		log.Error("Error al eliminar actividad:", result.Error)
+		return result.Error
+	}
+	if result.RowsAffected == 0 {
+		return fmt.Errorf("no se encontró la actividad con ID %d", id)
+	}
+	return nil
+}

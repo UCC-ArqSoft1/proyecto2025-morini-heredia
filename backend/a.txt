@@ -3,7 +3,7 @@ INSERT INTO usuarios (nombre, apellido, username, password, is_admin)
 VALUES (
     'Juan',
     'Pérez',
-    'jperez',
-    SHA2('miPassword123', 256),
+    'admin',
+    SHA2('admin', 256),
     FALSE
 );

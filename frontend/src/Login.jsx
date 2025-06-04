@@ -2,7 +2,16 @@ import { useState } from "react";
 import './Login.css';
 import { useNavigate } from "react-router-dom";
 
+const isAdmin = (token) => {
+    const parts = token.split('.');
+    const decodedPaylod = atob(parts[1]);
+
+    const claims = JSON.parse(decodedPaylod);
+    return claims.is_admin
+}
+
 const Login = () => {
+    
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -28,9 +37,10 @@ const Login = () => {
 
             if (response.ok) {
                 const data = await response.json();
+                const admin = isAdmin(data.access_token);
                 
                 localStorage.setItem("access_token", data.access_token);
-                localStorage.setItem("token_type", data.token_type);
+                localStorage.setItem("isAdmin", admin.toString());
                 localStorage.setItem("isLoggedIn", "true");
                 
                 navigate("/actividades");
@@ -48,8 +58,15 @@ const Login = () => {
         }
     };
 
+    const handleBack = () => {
+        navigate('/');
+    };
+
     return (
         <div className="login-container">
+            <button onClick={handleBack} className="back-button">
+                ← Volver
+            </button>
             <form className="login-form" onSubmit={handlerLogin}>
                 <h2>Iniciar Sesión</h2>
                 

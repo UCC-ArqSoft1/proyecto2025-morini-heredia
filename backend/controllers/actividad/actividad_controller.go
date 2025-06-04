@@ -50,3 +50,26 @@ func GetActividadById(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, actividad)
 }
+
+func DeleteActividad(ctx *gin.Context) {
+	isAdmin, exists := ctx.Get("is_admin")
+	if !exists || !isAdmin.(bool) {
+		ctx.JSON(http.StatusForbidden, gin.H{"error": "No tienes permisos para realizar esta acción"})
+		return
+	}
+
+	idActividad, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "El id debe ser un número"})
+		return
+	}
+
+	err = services.ActividadService.DeleteActividad(uint(idActividad))
+	if err != nil {
+		log.Error("Error al eliminar actividad:", err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Error al eliminar la actividad"})
+		return
+	}
+
+	ctx.Status(http.StatusNoContent)
+}

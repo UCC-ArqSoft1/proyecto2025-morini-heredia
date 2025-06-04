@@ -147,6 +147,7 @@ func MapURLs() {
 	router.GET("/actividades", actividad.GetAllActividades)
 	router.GET("/actividades/:id", actividad.GetActividadById)
 	router.GET("/actividades/buscar", actividad.GetActividadesByParams)
+	router.DELETE("/actividades/:id", JWTValidation, actividad.DeleteActividad)
 
 	// usuarios
 	router.POST("/login", usuario.Login)

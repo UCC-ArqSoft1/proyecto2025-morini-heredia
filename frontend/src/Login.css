@@ -1,12 +1,35 @@
-
 .login-container {
-
-    width: 100%;
-    padding: 20px;
-    box-sizing: border-box; 
-
-    background-color: #f0f2f5; 
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f2f5;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #333;
+    cursor: pointer;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: transform 0.2s ease;
+}
+
+.back-button:hover {
+    transform: translateX(-5px);
+    color: #007bff;
 }
 
 .login-form {
@@ -62,4 +85,10 @@
 
 .login-form button:hover {
     background-color: #0056b3;
+}
+
+.error-message {
+    color: #dc3545;
+    margin-bottom: 20px;
+    font-size: 14px;
 }

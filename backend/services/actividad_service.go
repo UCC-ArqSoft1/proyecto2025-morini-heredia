@@ -13,6 +13,7 @@ type IactividadService interface {
 	GetAllActividades() (dto.ActividadesMinDTO, error)
 	GetActividadesByParams(params map[string]any) (dto.ActividadesMinDTO, error)
 	GetActividadByID(id int) (dto.ActividadDTO, error)
+	DeleteActividad(id uint) error
 }
 
 var (
@@ -29,6 +30,7 @@ func (s *actividadService) GetAllActividades() (dto.ActividadesMinDTO, error) {
 
 	for i, v := range actividades {
 		actividadDTO := dto.ActividadMinDTO{
+			Id:          v.Id,
 			Titulo:      v.Titulo,
 			Descripcion: v.Descripcion,
 			Cupo:        v.Cupo,
@@ -51,6 +53,7 @@ func (s *actividadService) GetActividadesByParams(params map[string]any) (dto.Ac
 
 	for i, v := range actividades {
 		actividadDTO := dto.ActividadMinDTO{
+			Id:          v.Id,
 			Titulo:      v.Titulo,
 			Descripcion: v.Descripcion,
 			Cupo:        v.Cupo,
@@ -86,4 +89,8 @@ func (s *actividadService) GetActividadByID(id int) (dto.ActividadDTO, error) {
 	}
 
 	return actividadDTO, nil
+}
+
+func (s *actividadService) DeleteActividad(id uint) error {
+	return actividad.DeleteActividad(id)
 }

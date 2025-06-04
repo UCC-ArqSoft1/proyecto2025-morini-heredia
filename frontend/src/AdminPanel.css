@@ -1,0 +1,93 @@
+.admin-container {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.admin-container h2 {
+    color: #1a1a1a;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.admin-table-container {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.admin-table th {
+    background-color: #1a1a1a;
+    color: white;
+    text-align: left;
+    padding: 1rem;
+    font-weight: 500;
+}
+
+.admin-table td {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid #eaeaea;
+    color: #4a4a4a;
+}
+
+.admin-table tr:hover {
+    background-color: #f8f8f8;
+}
+
+.acciones-column {
+    white-space: nowrap;
+    width: 100px;
+    text-align: right;
+}
+
+.action-button {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.3rem;
+    margin-left: 0.5rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.action-button:hover {
+    transform: translateY(-2px);
+}
+
+.edit-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.delete-button:hover {
+    background-color: rgba(255, 0, 0, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .admin-table {
+        font-size: 0.85rem;
+    }
+    
+    .admin-table td, .admin-table th {
+        padding: 0.6rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-container {
+        padding: 1rem;
+    }
+    
+    .admin-table {
+        font-size: 0.8rem;
+    }
+} 

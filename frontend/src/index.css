@@ -9,8 +9,7 @@
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-smoothing: antialiased;
 }
 
 a {
@@ -24,12 +23,14 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  padding-top: 60px;
   overflow-x: hidden;
+}
+
+/* Aplicar padding-top solo cuando está dentro del Layout */
+.with-layout {
+  padding-top: 60px;
 }
 
 h1 {
@@ -53,7 +54,7 @@ button:hover {
 }
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: 4px auto;
 }
 
 @media (prefers-color-scheme: light) {
@@ -67,12 +68,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
-
-img-gym {
-  width: 100%;
-  display: flex;
-  top: 0;
-  left: 0;
-  
 }
