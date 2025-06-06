@@ -1,8 +1,9 @@
 package dto
 
 type InscripcionMinDTO struct {
-	Id       uint   `json:"id"`
-	IsActiva string `json:"is_activa"`
+	IdUsuario   uint   `json:"id_usuario"`
+	IdActividad uint   `json:"id_actividad"`
+	IsActiva    string `json:"is_activa"`
 }
 
 type InscripcionesMinDTO []InscripcionMinDTO

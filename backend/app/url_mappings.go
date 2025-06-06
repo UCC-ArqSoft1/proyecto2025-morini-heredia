@@ -98,8 +98,7 @@ ADMINISTRACION DE LOS MODELOS:
 				"id": int					// id de la inscripcion
 			}
 
-		// TODO: preguntar si se debe usar PATCH en lugar de DELETE (sino usamos PUT)
-		PATCH https://localhost:8080/inscripciones  // Permitir que un usuario elimine su inscripción en una actividad
+		DELETE https://localhost:8080/inscripciones  // Permitir que un usuario elimine su inscripción en una actividad
 			status: 204, 404, 401, 500
 			header: autorization:bearer TOKEN
 			body: {
@@ -145,9 +144,8 @@ ENDPOINTS PARA EL ADMINISTRADOR:
 func MapURLs() {
 	// actividades
 	router.GET("/actividades", actividad.GetAllActividades)
-	router.GET("/actividades/buscar", actividad.GetActividadesByParams)
 	router.GET("/actividades/:id", actividad.GetActividadById)
-	router.PUT("/actividades/:id", JWTValidation, actividad.UpdateActividad)
+	router.GET("/actividades/buscar", actividad.GetActividadesByParams)
 	router.DELETE("/actividades/:id", JWTValidation, actividad.DeleteActividad)
 
 	// usuarios
@@ -155,6 +153,8 @@ func MapURLs() {
 
 	// inscripciones
 	router.GET("/inscripciones", JWTValidation, inscripcion.GetAllInscripciones)
+
 	router.POST("/inscripciones", JWTValidation, inscripcion.InscribirUsuario)
-	router.PATCH("/inscripciones", JWTValidation, inscripcion.ActualizarUsuario)
+
+	router.DELETE("/inscripciones", JWTValidation, inscripcion.DesinscribirUsuario)
 }

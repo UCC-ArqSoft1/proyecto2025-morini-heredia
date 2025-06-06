@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"proyecto-integrador/dto"
 	"proyecto-integrador/services"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 
@@ -42,16 +43,52 @@ func InscribirUsuario(ctx *gin.Context) {
 		return
 	}
 
-	inscId, err := services.InscripcionService.InscribirUsuario(userID.(uint), idDTO.Id)
+	err := services.InscripcionService.InscribirUsuario(userID.(uint), idDTO.Id)
 	if err != nil {
 		log.Error(err)
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Error al inscribir al usuario"})
+
+		// TODO: ver si se puede revisar de otra forma el error que no sea mediante strings
+		errString := strings.ToLower(err.Error())
+		if strings.Contains(errString, "error 1062") {
+			ctx.JSON(http.StatusConflict, gin.H{"error": "El usuario ya esta inscripto a esta actividad"})
+		} else if strings.Contains(errString, "ya esta inscripto") {
+			ctx.JSON(http.StatusConflict, gin.H{"error": "El usuario ya esta inscripto a la actividad"})
+		} else {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Error al inscribir el usuario"})
+		}
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, gin.H{"id": inscId})
+	ctx.JSON(http.StatusCreated, idDTO)
 }
 
-func ActualizarUsuario(ctx *gin.Context) {
+func DesinscribirUsuario(ctx *gin.Context) {
+	userID, exists := ctx.Get("id_usuario")
+	if !exists {
+		log.Error("la variable 'id_usuario' no esta definida")
+		ctx.Status(http.StatusInternalServerError)
+		return
+	}
+
+	var idDTO dto.IdDTO
+	if err := ctx.BindJSON(&idDTO); err != nil {
+		log.Debug("IdDTO:", idDTO)
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Datos con formato incorrecto"})
+		return
+	}
+
+	err := services.InscripcionService.DesinscribirUsuario(userID.(uint), idDTO.Id)
+	if err != nil {
+		log.Error(err)
+
+		errString := strings.ToLower(err.Error())
+		if strings.Contains(errString, "error 1062") {
+			ctx.JSON(http.StatusConflict, gin.H{"error": "El usuario ya esta inscripto a esta actividad"})
+		} else {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Error al inscribir al usuario"})
+		}
+		return
+	}
+
 	ctx.Status(http.StatusNoContent)
 }

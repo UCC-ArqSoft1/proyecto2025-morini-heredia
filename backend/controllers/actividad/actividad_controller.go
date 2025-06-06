@@ -2,7 +2,6 @@ package actividad
 
 import (
 	"net/http"
-	"proyecto-integrador/dto"
 	"proyecto-integrador/services"
 	"strconv"
 
@@ -73,63 +72,4 @@ func DeleteActividad(ctx *gin.Context) {
 	}
 
 	ctx.Status(http.StatusNoContent)
-}
-
-func UpdateActividad(ctx *gin.Context) {
-	log.Info("Recibida solicitud PUT /actividades/:id")
-
-	// Verificar si el usuario es admin
-	isAdmin, exists := ctx.Get("is_admin")
-	if !exists || !isAdmin.(bool) {
-		log.Error("Usuario no autorizado intentando actualizar actividad")
-		ctx.JSON(http.StatusForbidden, gin.H{
-			"status": "error",
-			"error":  "No tienes permisos para realizar esta acción",
-		})
-		return
-	}
-
-	// Obtener el ID de la actividad
-	idActividad, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
-		log.Error("Error al convertir ID:", err)
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"status": "error",
-			"error":  "El id debe ser un número",
-		})
-		return
-	}
-
-	log.Infof("Actualizando actividad con ID: %d", idActividad)
-
-	// Obtener los datos actualizados del body
-	var actividadDTO dto.ActividadDTO
-	if err := ctx.ShouldBindJSON(&actividadDTO); err != nil {
-		log.Error("Error al parsear datos:", err)
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"status":   "error",
-			"error":    "Datos inválidos",
-			"detalles": err.Error(),
-		})
-		return
-	}
-
-	log.Info("Datos recibidos:", actividadDTO)
-
-	// Llamar al servicio para actualizar la actividad
-	err = services.ActividadService.UpdateActividad(uint(idActividad), actividadDTO)
-	if err != nil {
-		log.Error("Error al actualizar actividad:", err)
-		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"status": "error",
-			"error":  err.Error(),
-		})
-		return
-	}
-
-	log.Info("Actividad actualizada correctamente")
-	ctx.JSON(http.StatusOK, gin.H{
-		"status":  "success",
-		"mensaje": "Actividad actualizada correctamente",
-	})
 }
