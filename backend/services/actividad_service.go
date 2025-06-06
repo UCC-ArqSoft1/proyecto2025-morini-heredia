@@ -10,8 +10,8 @@ import (
 type actividadService struct{}
 
 type IactividadService interface {
-	GetAllActividades() (dto.ActividadesMinDTO, error)
-	GetActividadesByParams(params map[string]any) (dto.ActividadesMinDTO, error)
+	GetAllActividades() (dto.ActividadesDTO, error)
+	GetActividadesByParams(params map[string]any) (dto.ActividadesDTO, error)
 	GetActividadByID(id int) (dto.ActividadDTO, error)
 	DeleteActividad(id uint) error
 }
@@ -24,12 +24,12 @@ func init() {
 	ActividadService = &actividadService{}
 }
 
-func (s *actividadService) GetAllActividades() (dto.ActividadesMinDTO, error) {
+func (s *actividadService) GetAllActividades() (dto.ActividadesDTO, error) {
 	var actividades model.Actividades = actividad.GetAllActividades()
-	var actividadesDTO dto.ActividadesMinDTO = make(dto.ActividadesMinDTO, len(actividades))
+	var actividadesDTO dto.ActividadesDTO = make(dto.ActividadesDTO, len(actividades))
 
 	for i, v := range actividades {
-		actividadDTO := dto.ActividadMinDTO{
+		actividadDTO := dto.ActividadDTO{
 			Id:          v.Id,
 			Titulo:      v.Titulo,
 			Descripcion: v.Descripcion,
@@ -47,12 +47,12 @@ func (s *actividadService) GetAllActividades() (dto.ActividadesMinDTO, error) {
 	return actividadesDTO, nil
 }
 
-func (s *actividadService) GetActividadesByParams(params map[string]any) (dto.ActividadesMinDTO, error) {
+func (s *actividadService) GetActividadesByParams(params map[string]any) (dto.ActividadesDTO, error) {
 	var actividades model.Actividades = actividad.GetActividadesByParams(params)
-	var actividadesDTO dto.ActividadesMinDTO = make(dto.ActividadesMinDTO, len(actividades))
+	var actividadesDTO dto.ActividadesDTO = make(dto.ActividadesDTO, len(actividades))
 
 	for i, v := range actividades {
-		actividadDTO := dto.ActividadMinDTO{
+		actividadDTO := dto.ActividadDTO{
 			Id:          v.Id,
 			Titulo:      v.Titulo,
 			Descripcion: v.Descripcion,

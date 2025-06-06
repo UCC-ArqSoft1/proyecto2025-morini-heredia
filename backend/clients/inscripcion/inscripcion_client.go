@@ -5,6 +5,7 @@ import (
 	"proyecto-integrador/model"
 
 	log "github.com/sirupsen/logrus"
+	"errors"
 )
 
 func GetAllInscripciones(id_usuario uint) (model.Inscripciones, error) {
@@ -36,6 +37,10 @@ func AltaDeInscripcion(id_usuario, id_actividad uint) error {
 
 	// si el registro ya existe, actualizamos is_activa = 1
 	if result.RowsAffected == 0 {
+		if insc.IsActiva {
+			return errors.New("El usuario ya esta inscripto")
+		}
+
 		return db.GetInstance().Model(&insc).Update("is_activa", true).Error
 	}
 
