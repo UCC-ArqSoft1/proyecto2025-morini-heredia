@@ -16,8 +16,18 @@ func init() {
 }
 
 func StartRoute() {
+	// Configurar el modo de Gin
+	gin.SetMode(gin.DebugMode)
+
 	MapMiddewares()
 	MapURLs()
+
+	// Imprimir todas las rutas registradas
+	routes := router.Routes()
+	log.Info("Rutas registradas:")
+	for _, route := range routes {
+		log.Infof("%s %s", route.Method, route.Path)
+	}
 
 	host := os.Getenv("APP_HOST")
 	port := os.Getenv("APP_PORT")
@@ -27,5 +37,7 @@ func StartRoute() {
 	hostport := host + ":" + port
 
 	log.Info("Iniciando servidor en: ", hostport)
-	router.Run(hostport)
+	if err := router.Run(hostport); err != nil {
+		log.Fatal("Error al iniciar el servidor:", err)
+	}
 }

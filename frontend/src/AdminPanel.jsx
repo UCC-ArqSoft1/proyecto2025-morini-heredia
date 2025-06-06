@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import EditarActividadModal from './EditarActividadModal';
+import AgregarActividadModal from './AgregarActividadModal';
 import './AdminPanel.css';
 
 const AdminPanel = () => {
     const [actividades, setActividades] = useState([]);
+    const [actividadEditar, setActividadEditar] = useState(null);
+    const [mostrarAgregarModal, setMostrarAgregarModal] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -28,8 +32,16 @@ const AdminPanel = () => {
     };
 
     const handleEditar = (actividad) => {
-        // TODO: Implementar edición
-        console.log("Editar actividad:", actividad);
+        setActividadEditar(actividad);
+    };
+
+    const handleCloseModal = () => {
+        setActividadEditar(null);
+        setMostrarAgregarModal(false);
+    };
+
+    const handleSaveEdit = () => {
+        fetchActividades();
     };
 
     const handleEliminar = async (actividad) => {
@@ -41,7 +53,6 @@ const AdminPanel = () => {
 
         if (window.confirm('¿Estás seguro de que deseas eliminar esta actividad?')) {
             try {
-                console.log("Intentando eliminar actividad con ID:", actividad.id); // Para debug
                 const response = await fetch(`http://localhost:8080/actividades/${actividad.id}`, {
                     method: 'DELETE',
                     headers: {
@@ -51,7 +62,6 @@ const AdminPanel = () => {
                 });
 
                 if (response.ok) {
-                    // Actualizar la lista de actividades
                     fetchActividades();
                     alert('Actividad eliminada con éxito');
                 } else {
@@ -67,7 +77,17 @@ const AdminPanel = () => {
 
     return (
         <div className="admin-container">
-            <h2>Panel de Administración</h2>
+            <div className="admin-header">
+                <h2>Panel de Administración</h2>
+                <button 
+                    className="btn-agregar"
+                    onClick={() => setMostrarAgregarModal(true)}
+                >
+                    <span>+</span>
+                    Agregar Actividad
+                </button>
+            </div>
+
             <div className="admin-table-container">
                 <table className="admin-table">
                     <thead>
@@ -113,6 +133,21 @@ const AdminPanel = () => {
                     </tbody>
                 </table>
             </div>
+
+            {actividadEditar && (
+                <EditarActividadModal
+                    actividad={actividadEditar}
+                    onClose={handleCloseModal}
+                    onSave={handleSaveEdit}
+                />
+            )}
+
+            {mostrarAgregarModal && (
+                <AgregarActividadModal
+                    onClose={handleCloseModal}
+                    onSave={handleSaveEdit}
+                />
+            )}
         </div>
     );
 };

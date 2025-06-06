@@ -145,8 +145,9 @@ ENDPOINTS PARA EL ADMINISTRADOR:
 func MapURLs() {
 	// actividades
 	router.GET("/actividades", actividad.GetAllActividades)
-	router.GET("/actividades/:id", actividad.GetActividadById)
 	router.GET("/actividades/buscar", actividad.GetActividadesByParams)
+	router.GET("/actividades/:id", actividad.GetActividadById)
+	router.PUT("/actividades/:id", JWTValidation, actividad.UpdateActividad)
 	router.DELETE("/actividades/:id", JWTValidation, actividad.DeleteActividad)
 
 	// usuarios
@@ -154,8 +155,6 @@ func MapURLs() {
 
 	// inscripciones
 	router.GET("/inscripciones", JWTValidation, inscripcion.GetAllInscripciones)
-
 	router.POST("/inscripciones", JWTValidation, inscripcion.InscribirUsuario)
-
 	router.PATCH("/inscripciones", JWTValidation, inscripcion.ActualizarUsuario)
 }

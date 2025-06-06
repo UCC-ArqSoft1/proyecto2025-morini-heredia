@@ -64,3 +64,15 @@ func DeleteActividad(id uint) error {
 	}
 	return nil
 }
+
+func UpdateActividad(actividad model.Actividad) error {
+	result := db.GetInstance().Model(&model.Actividad{}).Where("id_actividad = ?", actividad.Id).Updates(&actividad)
+	if result.Error != nil {
+		log.Error("Error al actualizar actividad:", result.Error)
+		return result.Error
+	}
+	if result.RowsAffected == 0 {
+		return fmt.Errorf("no se encontró la actividad con ID %d", actividad.Id)
+	}
+	return nil
+}
