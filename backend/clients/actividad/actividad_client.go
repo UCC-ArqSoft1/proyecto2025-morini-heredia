@@ -8,9 +8,9 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func GetActividadesByParams(params map[string]any) model.Actividades {
-	var actividades model.Actividades
-	query := db.GetInstance().Model(&model.Actividad{})
+func GetActividadesByParams(params map[string]any) model.ActividadesVista {
+	var actividades model.ActividadesVista
+	query := db.GetInstance().Model(&model.ActividadVista{})
 
 	if params["id"] != "" {
 		query = query.Where("id_actividad = ?", params["id"])
@@ -35,8 +35,8 @@ func GetActividadesByParams(params map[string]any) model.Actividades {
 	return actividades
 }
 
-func GetActividadById(id int) model.Actividad {
-	var actividad model.Actividad
+func GetActividadById(id int) model.ActividadVista {
+	var actividad model.ActividadVista
 	db.GetInstance().Where("id_actividad = ?", id).First(&actividad)
 
 	log.Debug("Actividad: ", actividad)
@@ -44,8 +44,8 @@ func GetActividadById(id int) model.Actividad {
 	return actividad
 }
 
-func GetAllActividades() model.Actividades {
-	var actividades model.Actividades
+func GetAllActividades() model.ActividadesVista {
+	var actividades model.ActividadesVista
 	db.GetInstance().Find(&actividades)
 
 	log.Debug("Actividades: ", actividades)

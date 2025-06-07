@@ -113,6 +113,8 @@ const Actividades = () => {
             } else {
                 alert(`Ups! algo salio mal, vuelve a intentarlo mas tarde`);
             }
+
+            fetchActividades();
         } catch (error) {
             alert(`Ups! algo salio mal, vuelve a intentarlo mas tarde`);
             console.error("Error al inscribir el usuario:", error);
@@ -138,6 +140,8 @@ const Actividades = () => {
             } else {
                 alert(`Ups! algo salio mal, vuelve a intentarlo mas tarde`);
             }
+
+            fetchActividades();
         } catch (error) {
             alert(`Ups! algo salio mal, vuelve a intentarlo mas tarde`);
             console.error("Error al desinscribir el usuario:", error);
@@ -252,7 +256,7 @@ const Actividades = () => {
                                     Horario: {actividad.hora_inicio} a {actividad.hora_fin}
                                 </span>
                             </p>
-                            <p>Cupo disponible: {actividad.cupo || "No especificado"}</p>
+                            <p>Cupo disponible: {actividad.lugares}</p>
                         </div>
 
                         {isLoggedIn && (

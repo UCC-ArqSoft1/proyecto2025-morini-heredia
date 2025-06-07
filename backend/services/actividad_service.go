@@ -25,7 +25,7 @@ func init() {
 }
 
 func (s *actividadService) GetAllActividades() (dto.ActividadesDTO, error) {
-	var actividades model.Actividades = actividad.GetAllActividades()
+	var actividades model.ActividadesVista = actividad.GetAllActividades()
 	var actividadesDTO dto.ActividadesDTO = make(dto.ActividadesDTO, len(actividades))
 
 	for i, v := range actividades {
@@ -39,6 +39,7 @@ func (s *actividadService) GetAllActividades() (dto.ActividadesDTO, error) {
 			HoraFin:     v.HorarioFinal.Format("15:04"),
 			Instructor:  v.Instructor,
 			Categoria:   v.Categoria,
+			Lugares:     v.Lugares,
 		}
 
 		actividadesDTO[i] = actividadDTO
@@ -48,7 +49,7 @@ func (s *actividadService) GetAllActividades() (dto.ActividadesDTO, error) {
 }
 
 func (s *actividadService) GetActividadesByParams(params map[string]any) (dto.ActividadesDTO, error) {
-	var actividades model.Actividades = actividad.GetActividadesByParams(params)
+	var actividades model.ActividadesVista = actividad.GetActividadesByParams(params)
 	var actividadesDTO dto.ActividadesDTO = make(dto.ActividadesDTO, len(actividades))
 
 	for i, v := range actividades {
@@ -71,7 +72,7 @@ func (s *actividadService) GetActividadesByParams(params map[string]any) (dto.Ac
 }
 
 func (s *actividadService) GetActividadByID(id int) (dto.ActividadDTO, error) {
-	var actividad model.Actividad = actividad.GetActividadById(id)
+	var actividad model.ActividadVista = actividad.GetActividadById(id)
 	if actividad.Id == 0 {
 		return dto.ActividadDTO{}, fmt.Errorf("actividad con ID %d no encontrada", id)
 	}

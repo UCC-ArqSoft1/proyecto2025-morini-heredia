@@ -72,17 +72,8 @@ END;
 
 DELIMITER ;
 
-DROP VIEW IF EXISTS vista_inscripciones_activas;
+DROP VIEW IF EXISTS actividads_lugares;
 
-CREATE VIEW vista_inscripciones_activas AS
-SELECT 
-    ac.id_actividad,
-    cupo as cupo_max,
-    COUNT(ins.id_usuario) AS inscriptos
-FROM 
-    actividads ac
-LEFT JOIN 
-    inscripcions ins ON ins.id_actividad = ac.id_actividad AND ins.is_activa = 1
-GROUP BY 
-    ac.id_actividad;
-
+CREATE VIEW actividads_lugares AS
+SELECT *, cupo - (SELECT COUNT(*) FROM inscripcions ins WHERE ins.id_actividad = ac.id_actividad AND ins.is_activa) AS lugares
+FROM actividads ac;

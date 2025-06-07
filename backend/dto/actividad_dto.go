@@ -10,6 +10,7 @@ type ActividadDTO struct {
 	HoraFin     string `json:"hora_fin"`
 	Instructor  string `json:"instructor"`
 	Categoria   string `json:"categoria"`
+	Lugares     uint   `json:"lugares"`
 }
 
 type ActividadesDTO []ActividadDTO
