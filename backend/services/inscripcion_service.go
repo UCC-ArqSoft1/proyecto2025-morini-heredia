@@ -32,7 +32,7 @@ func (is *inscripcionService) GetAllInscripciones(id_usuario uint) (dto.Inscripc
 		dto := dto.InscripcionDTO{
 			IdUsuario:        v.IdUsuario,
 			IdActividad:      v.IdActividad,
-			FechaInscripcion: v.FechaInscripcion,
+			FechaInscripcion: v.FechaInscripcion.GoString(),
 			IsActiva:         v.IsActiva,
 		}
 		resultado = append(resultado, dto)

@@ -1,12 +1,11 @@
 package services
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
 	"errors"
 	"os"
 	"proyecto-integrador/clients/usuario"
 	"proyecto-integrador/model"
+	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -36,10 +35,9 @@ func init() {
 func (us *usuarioService) GenerateToken(username string, password string) (string, error) {
 	var userdata model.Usuario = usuario.GetUsuarioByUsername(username)
 
-	hashedPassword := sha256.Sum256([]byte(password))
-	if hex.EncodeToString(hashedPassword[:]) != userdata.Password {
+	if strings.ToLower(password) != userdata.Password {
 		log.Debugf("Contraseña incorrecta para el usuario %s@%s\n", username, password)
-		log.Debugf("Hash ingresado: %s", hex.EncodeToString(hashedPassword[:]))
+		// log.Debugf("Hash ingresado: %s", hex.EncodeToString(hashedPassword[:]))
 		return "", IncorrectCredentialsError
 	}
 

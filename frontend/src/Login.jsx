@@ -2,16 +2,22 @@ import { useState } from "react";
 import './Login.css';
 import { useNavigate } from "react-router-dom";
 
-const isAdmin = (token) => {
+const getTokenPayload = (token) => {
     const parts = token.split('.');
     const decodedPaylod = atob(parts[1]);
 
-    const claims = JSON.parse(decodedPaylod);
-    return claims.is_admin
+    return JSON.parse(decodedPaylod);
+}
+
+const sha256 = async (text) => {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(text);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
 const Login = () => {
-    
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -31,18 +37,21 @@ const Login = () => {
                 },
                 body: JSON.stringify({
                     username: username.trim(),
-                    password: password
+                    password: await sha256(password)
                 })
             });
 
             if (response.ok) {
                 const data = await response.json();
-                const admin = isAdmin(data.access_token);
-                
+                const payload = getTokenPayload(data.access_token)
+                const admin = payload.is_admin;
+                const idUsuario = payload.id_usuario
+
                 localStorage.setItem("access_token", data.access_token);
+                localStorage.setItem("idUsuario", parseInt(idUsuario));
                 localStorage.setItem("isAdmin", admin.toString());
                 localStorage.setItem("isLoggedIn", "true");
-                
+
                 navigate("/actividades");
             } else {
                 const errorData = await response.json();
@@ -69,9 +78,9 @@ const Login = () => {
             </button>
             <form className="login-form" onSubmit={handlerLogin}>
                 <h2>Iniciar Sesión</h2>
-                
+
                 {error && <div className="error-message">{error}</div>}
-                
+
                 <div className="input-group">
                     <input
                         type="text"
@@ -82,7 +91,7 @@ const Login = () => {
                         required
                     />
                 </div>
-                
+
                 <div className="input-group">
                     <input
                         type="password"
@@ -93,7 +102,7 @@ const Login = () => {
                         required
                     />
                 </div>
-                
+
                 <button type="submit" disabled={isLoading}>
                     {isLoading ? "Ingresando..." : "Ingresar"}
                 </button>

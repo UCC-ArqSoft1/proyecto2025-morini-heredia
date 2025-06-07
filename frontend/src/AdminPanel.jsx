@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import EditarActividadModal from './EditarActividadModal';
-import AgregarActividadModal from './AgregarActividadModal';
+// import AgregarActividadModal from './AgregarActividadModal';
 import './AdminPanel.css';
 
 const AdminPanel = () => {

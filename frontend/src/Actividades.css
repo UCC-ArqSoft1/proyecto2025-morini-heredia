@@ -166,6 +166,7 @@
 }
 
 .filtro-input {
+    color: #000000;
     width: 200px;
     padding: 0.5rem 0.5rem 0.5rem 2rem;
     border: 1px solid #e0e0e0;
@@ -176,6 +177,7 @@
 }
 
 .filtro-input:focus {
+    color: #000000;
     outline: none;
     border-color: #4CAF50;
     box-shadow: 0 0 5px rgba(76, 175, 80, 0.2);
@@ -183,6 +185,7 @@
 }
 
 .filtro-select {
+    color: #000000;
     width: 120px;
     padding: 0.5rem;
     border: 1px solid #e0e0e0;
@@ -194,6 +197,7 @@
 }
 
 .filtro-select:focus {
+    color: #000000;
     outline: none;
     border-color: #4CAF50;
     box-shadow: 0 0 5px rgba(76, 175, 80, 0.2);

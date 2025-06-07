@@ -4,8 +4,9 @@ import (
 	"proyecto-integrador/db"
 	"proyecto-integrador/model"
 
-	log "github.com/sirupsen/logrus"
 	"errors"
+
+	log "github.com/sirupsen/logrus"
 )
 
 func GetAllInscripciones(id_usuario uint) (model.Inscripciones, error) {

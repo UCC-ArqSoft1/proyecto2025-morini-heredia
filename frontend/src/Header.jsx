@@ -19,15 +19,15 @@ const Header = ( ) => {
                 <nav className="header-content">
                     <h1 className="header-title">GymPro</h1> 
                     <div className="header-links"> 
-                        <a href="/">Inicio</a>
-                        <a href="/actividades">Actividades</a>
+                        <a href="/">Inicio 🏠</a>
+                        <a href="/actividades">Actividades 🏋🏽‍♂️</a>
                         {isAdmin && (
                             <a href="/admin">Panel Admin</a>
                         )}
                         {isLoggedIn ? (
-                            <button onClick={logout}>Cerrar sesión</button>
+                            <button onClick={logout}>Cerrar sesión ✖️</button>
                         ) : (
-                            <a href="/login">Iniciar Sesión</a>
+                            <a href="/login">Iniciar Sesión ⏫</a>
                         )}
                     </div>
                 </nav>

@@ -1,7 +1,7 @@
 package dto
 
 type ActividadMinDTO struct {
-	Id          uint   `json:"id"`
+	Id          uint   `json:"id_actividad"`
 	Titulo      string `json:"titulo"`
 	Descripcion string `json:"descripcion"`
 	Cupo        uint   `json:"cupo"`
