@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v4"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -37,7 +37,6 @@ func (us *usuarioService) GenerateToken(username string, password string) (strin
 
 	if strings.ToLower(password) != userdata.Password {
 		log.Debugf("Contraseña incorrecta para el usuario %s@%s\n", username, password)
-		// log.Debugf("Hash ingresado: %s", hex.EncodeToString(hashedPassword[:]))
 		return "", IncorrectCredentialsError
 	}
 

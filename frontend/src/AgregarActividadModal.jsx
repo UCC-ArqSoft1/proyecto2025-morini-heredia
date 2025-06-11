@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import './EditarActividadModal.css';
+import React, { useState } from 'react';
+import './Modal.css';
 
-const EditarActividadModal = ({ actividad, onClose, onSave }) => {
+const AgregarActividadModal = ({ onClose, onSave }) => {
     const [formData, setFormData] = useState({
-        id_actividad: '',
         titulo: '',
         descripcion: '',
-        cupo: 0,
+        cupo: '',
         dia: '',
         hora_inicio: '',
         hora_fin: '',
@@ -15,12 +14,6 @@ const EditarActividadModal = ({ actividad, onClose, onSave }) => {
     });
     const [error, setError] = useState('');
     const [validationErrors, setValidationErrors] = useState({});
-
-    useEffect(() => {
-        if (actividad) {
-            setFormData(actividad);
-        }
-    }, [actividad]);
 
     const validateForm = () => {
         const errors = {};
@@ -35,7 +28,7 @@ const EditarActividadModal = ({ actividad, onClose, onSave }) => {
             errors.descripcion = 'La descripción es requerida';
         }
 
-        if (!formData.cupo || formData.cupo < 1) {
+        if (!formData.cupo || parseInt(formData.cupo) < 1) {
             errors.cupo = 'El cupo debe ser mayor a 0';
         }
 
@@ -90,46 +83,33 @@ const EditarActividadModal = ({ actividad, onClose, onSave }) => {
             const token = localStorage.getItem('access_token');
             if (!token) {
                 setError('No hay sesión activa. Por favor, inicie sesión nuevamente.');
-                // Redirigir al login después de 2 segundos
                 setTimeout(() => {
                     window.location.href = '/login';
                 }, 2000);
                 return;
             }
 
-            // Asegurarse de que los campos numéricos sean números y que el día tenga el formato correcto
             const dataToSend = {
                 ...formData,
-                id_actividad: actividad.id_actividad,
                 cupo: parseInt(formData.cupo, 10),
-                dia: formData.dia.normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Eliminar acentos
+                dia: formData.dia.normalize("NFD").replace(/[\u0300-\u036f]/g, ""), // Eliminar acentos
+                hora_inicio: formData.hora_inicio,
+                hora_fin: formData.hora_fin,
+                foto_url: "SAMPLE_URL" // Campo requerido por el backend
             };
 
-            console.log('Token:', token);
-            console.log('URL:', `http://localhost:8080/actividades/${actividad.id_actividad}`);
-            console.log('Datos a enviar:', dataToSend);
-
-            const response = await fetch(`http://localhost:8080/actividades/${actividad.id_actividad}`, {
-                method: 'PUT',
+            const response = await fetch('http://localhost:8080/actividades', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                    'Accept': 'application/json'
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(dataToSend)
             });
 
-            console.log('Respuesta status:', response.status); // Para depuración
-            console.log('Respuesta ok:', response.ok); // Para depuración
-
-            const responseData = await response.json();
-            console.log('Respuesta del servidor:', responseData); // Para depuración
-
             if (response.status === 401) {
                 setError('Su sesión ha expirado. Por favor, inicie sesión nuevamente.');
-                // Limpiar el token expirado
                 localStorage.removeItem('access_token');
-                // Redirigir al login después de 2 segundos
                 setTimeout(() => {
                     window.location.href = '/login';
                 }, 2000);
@@ -140,19 +120,19 @@ const EditarActividadModal = ({ actividad, onClose, onSave }) => {
                 onSave();
                 onClose();
             } else {
-                const errorMessage = responseData.error || 'Error al actualizar la actividad';
-                setError(errorMessage);
+                const errorData = await response.json();
+                setError(errorData.error || 'Error al crear la actividad');
             }
         } catch (error) {
-            console.error('Error completo:', error);
-            setError('Error al conectar con el servidor. Por favor, verifique su conexión e intente nuevamente.');
+            console.error('Error:', error);
+            setError('Error al conectar con el servidor');
         }
     };
 
     return (
         <div className="modal-overlay">
             <div className="modal-content">
-                <h2>Editar Actividad</h2>
+                <h2>Agregar Nueva Actividad</h2>
                 {error && <div className="error-message">{error}</div>}
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
@@ -268,7 +248,7 @@ const EditarActividadModal = ({ actividad, onClose, onSave }) => {
                     </div>
 
                     <div className="form-buttons">
-                        <button type="submit" className="btn-guardar">Guardar Cambios</button>
+                        <button type="submit" className="btn-guardar">Crear Actividad</button>
                         <button type="button" className="btn-cancelar" onClick={onClose}>
                             Cancelar
                         </button>
@@ -279,4 +259,4 @@ const EditarActividadModal = ({ actividad, onClose, onSave }) => {
     );
 };
 
-export default EditarActividadModal; 
+export default AgregarActividadModal; 

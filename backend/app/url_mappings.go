@@ -146,6 +146,8 @@ func MapURLs() {
 	router.GET("/actividades", actividad.GetAllActividades)
 	router.GET("/actividades/:id", actividad.GetActividadById)
 	router.GET("/actividades/buscar", actividad.GetActividadesByParams)
+	router.POST("/actividades", JWTValidation, actividad.CreateActividad)
+	router.PUT("/actividades/:id", JWTValidation, actividad.UpdateActividad)
 	router.DELETE("/actividades/:id", JWTValidation, actividad.DeleteActividad)
 
 	// usuarios
@@ -153,8 +155,6 @@ func MapURLs() {
 
 	// inscripciones
 	router.GET("/inscripciones", JWTValidation, inscripcion.GetAllInscripciones)
-
 	router.POST("/inscripciones", JWTValidation, inscripcion.InscribirUsuario)
-
 	router.DELETE("/inscripciones", JWTValidation, inscripcion.DesinscribirUsuario)
 }

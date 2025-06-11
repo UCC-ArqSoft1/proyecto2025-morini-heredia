@@ -2,6 +2,7 @@ package actividad
 
 import (
 	"net/http"
+	"proyecto-integrador/dto"
 	"proyecto-integrador/services"
 	"strconv"
 
@@ -49,6 +50,59 @@ func GetActividadById(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, actividad)
+}
+
+func CreateActividad(ctx *gin.Context) {
+	isAdmin, exists := ctx.Get("is_admin")
+	if !exists || !isAdmin.(bool) {
+		ctx.JSON(http.StatusForbidden, gin.H{"error": "No tienes permisos para realizar esta acción"})
+		return
+	}
+
+	var actividadDTO dto.ActividadDTO
+	if err := ctx.BindJSON(&actividadDTO); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Datos con formato incorrecto"})
+		return
+	}
+
+	err := services.ActividadService.CreateActividad(actividadDTO)
+	if err != nil {
+		log.Error("Error al crear actividad:", err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Error al crear la actividad"})
+		return
+	}
+
+	ctx.JSON(http.StatusCreated, actividadDTO)
+}
+
+func UpdateActividad(ctx *gin.Context) {
+	isAdmin, exists := ctx.Get("is_admin")
+	if !exists || !isAdmin.(bool) {
+		ctx.JSON(http.StatusForbidden, gin.H{"error": "No tienes permisos para realizar esta acción"})
+		return
+	}
+
+	idActividad, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "El id debe ser un número"})
+		return
+	}
+
+	var actividadDTO dto.ActividadDTO
+	if err := ctx.BindJSON(&actividadDTO); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Datos con formato incorrecto"})
+		return
+	}
+
+	actividadDTO.Id = uint(idActividad)
+	err = services.ActividadService.UpdateActividad(actividadDTO)
+	if err != nil {
+		log.Error("Error al actualizar actividad:", err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Error al actualizar la actividad"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, actividadDTO)
 }
 
 func DeleteActividad(ctx *gin.Context) {
