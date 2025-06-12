@@ -55,7 +55,7 @@ func (ins *Inscripcion) BeforeUpdate(tx *gorm.DB) (err error) {
 	}
 
 	// tiene que haber por lo menos un lugar para activar la inscripcion
-	if lugares < 1 {
+	if lugares < 1 && ins.IsActiva {
 		return fmt.Errorf("No se puede activar la inscripcion, el cupo de la actividad ha sido alcanzado.")
 	}
 
