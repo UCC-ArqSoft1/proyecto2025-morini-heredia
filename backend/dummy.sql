@@ -1,3 +1,5 @@
+-- REGISTROS PARA TESTEAR LA BASE DE DATOS
+
 -- Usuarios
 INSERT INTO usuarios (id_usuario, nombre, apellido, username, password, is_admin) VALUES
   (2, 'Ana',    'Gómez',    'ana.gomez',    'pass123', 0),
@@ -35,3 +37,10 @@ INSERT INTO inscripcions (id_usuario, id_actividad) VALUES
   (6, 7)
 ;
 
+-- PARA ELIMINAR TODAS LAS TABLAS
+-- set FOREIGN_KEY_CHECKS = 0;
+-- drop table inscripcions;
+-- drop table actividads;
+-- drop table usuarios;
+-- drop view actividads_lugares;
+-- set FOREIGN_KEY_CHECKS = 1;
