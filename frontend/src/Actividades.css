@@ -8,11 +8,12 @@
 
 .actividades-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, 350px);
     gap: 1.5rem;
     margin: 2rem 0 2rem 0;
     width: 100%;
     box-sizing: border-box;
+    justify-content: start;
 }
 
 .actividad-card {
@@ -24,8 +25,10 @@
     padding: 1.5rem;
     transition: all 0.3s ease;
     border: 1px solid #eaeaea;
-    min-height: 340px;
-    max-height: 440px;
+    min-height: 380px;
+    max-height: 480px;
+    width: 350px;
+    box-sizing: border-box;
 }
   
 .actividad-card:hover {
@@ -237,7 +240,8 @@
     }
 
     .actividades-grid {
-        margin: 1.5rem 0 1.5rem 0;
+        grid-template-columns: repeat(auto-fit, 350px);
+        justify-content: center;
     }
 
     .filtros-container {
@@ -271,7 +275,8 @@
     }
 
     .actividades-grid {
-        margin: 1rem 0 1rem 0;
+        grid-template-columns: repeat(auto-fit, 350px);
+        justify-content: center;
     }
 
     .actividad-card {
