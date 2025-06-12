@@ -186,10 +186,10 @@ const AgregarActividadModal = ({ onClose, onSave }) => {
                             <option value="">Seleccione un día</option>
                             <option value="Lunes">Lunes</option>
                             <option value="Martes">Martes</option>
-                            <option value="Miércoles">Miércoles</option>
+                            <option value="Miercoles">Miercoles</option>
                             <option value="Jueves">Jueves</option>
                             <option value="Viernes">Viernes</option>
-                            <option value="Sábado">Sábado</option>
+                            <option value="Sabado">Sabado</option>
                         </select>
                         {validationErrors.dia && <span className="error-text">{validationErrors.dia}</span>}
                     </div>
@@ -242,7 +242,6 @@ const AgregarActividadModal = ({ onClose, onSave }) => {
                             value={formData.categoria}
                             onChange={handleChange}
                             required
-                            placeholder="Ej: Musculación, Cardio, Yoga..."
                         />
                         {validationErrors.categoria && <span className="error-text">{validationErrors.categoria}</span>}
                     </div>

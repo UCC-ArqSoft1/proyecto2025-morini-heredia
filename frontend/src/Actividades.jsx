@@ -79,10 +79,11 @@ const Actividades = () => {
             );
         }
 
-        // Filtrar por categoría
+        // Filtrar por categoría (ahora como búsqueda de texto)
         if (filtros.categoria) {
+            const categoriaLower = filtros.categoria.toLowerCase();
             actividadesFiltradas = actividadesFiltradas.filter(actividad =>
-                actividad.categoria.toLowerCase() === filtros.categoria.toLowerCase()
+                actividad.categoria.toLowerCase().includes(categoriaLower)
             );
         }
 
@@ -223,19 +224,14 @@ const Actividades = () => {
                         className="filtro-input"
                     />
                 </div>
-                <select
+                <input
+                    type="text"
                     name="categoria"
+                    placeholder="Categoría..."
                     value={filtros.categoria}
                     onChange={handleFiltroChange}
-                    className="filtro-select"
-                >
-                    <option value="">Categoría</option>
-                    <option value="funcional">Funcional</option>
-                    <option value="spinning">Spinning</option>
-                    <option value="yoga">Yoga</option>
-                    <option value="pilates">Pilates</option>
-                    <option value="mma">MMA</option>
-                </select>
+                    className="filtro-input"
+                />
                 <select
                     name="dia"
                     value={filtros.dia}
@@ -243,12 +239,12 @@ const Actividades = () => {
                     className="filtro-select"
                 >
                     <option value="">Día</option>
-                    <option value="lunes">Lunes</option>
-                    <option value="martes">Martes</option>
-                    <option value="miercoles">Miércoles</option>
-                    <option value="jueves">Jueves</option>
-                    <option value="viernes">Viernes</option>
-                    <option value="sabado">Sábado</option>
+                    <option value="Lunes">Lunes</option>
+                    <option value="Martes">Martes</option>
+                    <option value="Miercoles">Miercoles</option>
+                    <option value="Jueves">Jueves</option>
+                    <option value="Viernes">Viernes</option>
+                    <option value="Sabado">Sabado</option>
                 </select>
             </div>
 
@@ -283,7 +279,7 @@ const Actividades = () => {
                                         </button>
                                         <button
                                             className="action-button delete-button"
-                                            onClick={() => handleEliminar(actividad.id_actividad)}
+                                            onClick={() => handleEliminar(actividad)}
                                             title="Eliminar"
                                         >
                                             <span>🗑️</span>

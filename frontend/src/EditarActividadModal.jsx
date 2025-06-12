@@ -176,10 +176,10 @@ const EditarActividadModal = ({ actividad, onClose, onSave }) => {
                             <option value="">Seleccione un día</option>
                             <option value="Lunes">Lunes</option>
                             <option value="Martes">Martes</option>
-                            <option value="Miércoles">Miércoles</option>
+                            <option value="Miercoles">Miercoles</option>
                             <option value="Jueves">Jueves</option>
                             <option value="Viernes">Viernes</option>
-                            <option value="Sábado">Sábado</option>
+                            <option value="Sabado">Sabado</option>
                         </select>
                         {validationErrors.dia && <span className="error-text">{validationErrors.dia}</span>}
                     </div>
@@ -217,6 +217,7 @@ const EditarActividadModal = ({ actividad, onClose, onSave }) => {
                             id="instructor"
                             name="instructor"
                             value={formData.instructor}
+                            placeholder="Instructor..."
                             onChange={handleChange}
                             required
                         />
@@ -225,20 +226,15 @@ const EditarActividadModal = ({ actividad, onClose, onSave }) => {
 
                     <div className="form-group">
                         <label htmlFor="categoria">Categoría:</label>
-                        <select
+                        <input
+                            type="text"
                             id="categoria"
                             name="categoria"
                             value={formData.categoria}
                             onChange={handleChange}
+                            placeholder="Ej: Musculación, Cardio, Yoga..."
                             required
-                        >
-                            <option value="">Seleccione una categoría</option>
-                            <option value="musculacion">Musculación</option>
-                            <option value="cardio">Cardio</option>
-                            <option value="yoga">Yoga</option>
-                            <option value="baile">Baile</option>
-                            <option value="funcional">Funcional</option>
-                        </select>
+                        />
                         {validationErrors.categoria && <span className="error-text">{validationErrors.categoria}</span>}
                     </div>
 
