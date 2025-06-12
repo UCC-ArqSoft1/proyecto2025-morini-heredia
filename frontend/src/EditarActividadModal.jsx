@@ -18,7 +18,19 @@ const EditarActividadModal = ({ actividad, onClose, onSave }) => {
 
     useEffect(() => {
         if (actividad) {
-            setFormData(actividad);
+            // Asegurarse de que todos los campos necesarios estén presentes y que el cupo sea un número
+            const actividadData = {
+                id_actividad: actividad.id_actividad,
+                titulo: actividad.titulo || '',
+                descripcion: actividad.descripcion || '',
+                cupo: parseInt(actividad.cupo, 10) || 0,
+                dia: actividad.dia || '',
+                hora_inicio: actividad.hora_inicio || '',
+                hora_fin: actividad.hora_fin || '',
+                instructor: actividad.instructor || '',
+                categoria: actividad.categoria || ''
+            };
+            setFormData(actividadData);
         }
     }, [actividad]);
 
@@ -69,15 +81,8 @@ const EditarActividadModal = ({ actividad, onClose, onSave }) => {
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
-            [name]: value
+            [name]: name === 'cupo' ? parseInt(value, 10) || 0 : value
         }));
-        // Limpiar error de validación cuando el usuario modifica el campo
-        if (validationErrors[name]) {
-            setValidationErrors(prev => ({
-                ...prev,
-                [name]: ''
-            }));
-        }
     };
 
     const handleSubmit = async (e) => {
@@ -87,65 +92,30 @@ const EditarActividadModal = ({ actividad, onClose, onSave }) => {
         }
 
         try {
-            const token = localStorage.getItem('access_token');
-            if (!token) {
-                setError('No hay sesión activa. Por favor, inicie sesión nuevamente.');
-                // Redirigir al login después de 2 segundos
-                setTimeout(() => {
-                    window.location.href = '/login';
-                }, 2000);
-                return;
-            }
-
-            // Asegurarse de que los campos numéricos sean números y que el día tenga el formato correcto
+            // Asegurarse de que el cupo sea un número antes de enviar
             const dataToSend = {
                 ...formData,
-                id_actividad: actividad.id_actividad,
-                cupo: parseInt(formData.cupo, 10),
-                dia: formData.dia.normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Eliminar acentos
+                cupo: parseInt(formData.cupo, 10)
             };
 
-            console.log('Token:', token);
-            console.log('URL:', `http://localhost:8080/actividades/${actividad.id_actividad}`);
-            console.log('Datos a enviar:', dataToSend);
-
-            const response = await fetch(`http://localhost:8080/actividades/${actividad.id_actividad}`, {
+            const response = await fetch(`http://localhost:8080/actividades/${formData.id_actividad}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                    'Accept': 'application/json'
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
                 },
                 body: JSON.stringify(dataToSend)
             });
-
-            console.log('Respuesta status:', response.status); // Para depuración
-            console.log('Respuesta ok:', response.ok); // Para depuración
-
-            const responseData = await response.json();
-            console.log('Respuesta del servidor:', responseData); // Para depuración
-
-            if (response.status === 401) {
-                setError('Su sesión ha expirado. Por favor, inicie sesión nuevamente.');
-                // Limpiar el token expirado
-                localStorage.removeItem('access_token');
-                // Redirigir al login después de 2 segundos
-                setTimeout(() => {
-                    window.location.href = '/login';
-                }, 2000);
-                return;
-            }
 
             if (response.ok) {
                 onSave();
                 onClose();
             } else {
-                const errorMessage = responseData.error || 'Error al actualizar la actividad';
-                setError(errorMessage);
+                const errorData = await response.json();
+                setError(errorData.error || 'Error al actualizar la actividad');
             }
         } catch (error) {
-            console.error('Error completo:', error);
-            setError('Error al conectar con el servidor. Por favor, verifique su conexión e intente nuevamente.');
+            setError('Error al conectar con el servidor');
         }
     };
 
@@ -255,15 +225,20 @@ const EditarActividadModal = ({ actividad, onClose, onSave }) => {
 
                     <div className="form-group">
                         <label htmlFor="categoria">Categoría:</label>
-                        <input
-                            type="text"
+                        <select
                             id="categoria"
                             name="categoria"
                             value={formData.categoria}
                             onChange={handleChange}
                             required
-                            placeholder="Ej: Musculación, Cardio, Yoga..."
-                        />
+                        >
+                            <option value="">Seleccione una categoría</option>
+                            <option value="musculacion">Musculación</option>
+                            <option value="cardio">Cardio</option>
+                            <option value="yoga">Yoga</option>
+                            <option value="baile">Baile</option>
+                            <option value="funcional">Funcional</option>
+                        </select>
                         {validationErrors.categoria && <span className="error-text">{validationErrors.categoria}</span>}
                     </div>
 

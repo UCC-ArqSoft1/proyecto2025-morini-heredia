@@ -47,12 +47,13 @@ func InscribirUsuario(ctx *gin.Context) {
 	if err != nil {
 		log.Error(err)
 
-		// TODO: ver si se puede revisar de otra forma el error que no sea mediante strings
 		errString := strings.ToLower(err.Error())
 		if strings.Contains(errString, "error 1062") {
 			ctx.JSON(http.StatusConflict, gin.H{"error": "El usuario ya esta inscripto a esta actividad"})
 		} else if strings.Contains(errString, "ya esta inscripto") {
 			ctx.JSON(http.StatusConflict, gin.H{"error": "El usuario ya esta inscripto a la actividad"})
+		} else if strings.Contains(errString, "cupo de la actividad ha sido alcanzado") {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "No se puede inscribir, el cupo de la actividad ha sido alcanzado"})
 		} else {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Error al inscribir el usuario"})
 		}

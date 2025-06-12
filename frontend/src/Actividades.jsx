@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import EditarActividadModal from './EditarActividadModal';
 import "./Actividades.css";
+import { useNavigate } from "react-router-dom";
 
 const Actividades = () => {
     const [actividades, setActividades] = useState([]);
@@ -14,6 +15,7 @@ const Actividades = () => {
     });
     const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
     const isAdmin = localStorage.getItem("isAdmin") === "true";
+    const navigate = useNavigate();
     // const idUsuario = parseInt(localStorage.getItem("idUsuario"))
 
     useEffect(() => {
@@ -94,30 +96,38 @@ const Actividades = () => {
         setActividadesFiltradas(actividadesFiltradas);
     };
 
-    const handleEnroling = async (id_actividad) => {
+    const handleEnroling = async (actividadId) => {
+        if (!isLoggedIn) {
+            navigate("/login");
+            return;
+        }
+
         try {
             const response = await fetch("http://localhost:8080/inscripciones", {
-                method: 'POST',
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
                 },
                 body: JSON.stringify({
-                    id: parseInt(id_actividad)
-                })
+                    id: actividadId,
+                }),
             });
 
-            if (response.status == 201) {
-                alert(`Inscripcion exitosa!`);
-                fetchInscripciones();
-            } else {
-                alert(`Ups! algo salio mal, vuelve a intentarlo mas tarde`);
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Error al inscribirse en la actividad");
             }
 
+            // Actualizar la lista de inscripciones
+            fetchInscripciones();
+            // Actualizar la lista de actividades para reflejar el cambio en los cupos
             fetchActividades();
+            alert("¡Inscripción exitosa!");
         } catch (error) {
-            alert(`Ups! algo salio mal, vuelve a intentarlo mas tarde`);
-            console.error("Error al inscribir el usuario:", error);
+            console.error("Error al inscribirse:", error);
+            alert(error.message);
         }
     };
     
@@ -256,7 +266,7 @@ const Actividades = () => {
                                     Horario: {actividad.hora_inicio} a {actividad.hora_fin}
                                 </span>
                             </p>
-                            <p>Cupo disponible: {actividad.lugares}</p>
+                            <p>Cupo total: {actividad.cupo} | Lugares disponibles: {actividad.lugares}</p>
                         </div>
 
                         {isLoggedIn && (
@@ -265,7 +275,7 @@ const Actividades = () => {
                                     <>
                                         <button
                                             className="action-button edit-button"
-                                            onClick={() => handleEditar(actividad.id_actividad)}
+                                            onClick={() => handleEditar(actividad)}
                                             title="Editar"
                                         >
                                             <span>✏️</span>

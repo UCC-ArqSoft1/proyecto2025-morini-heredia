@@ -1,3 +1,14 @@
+-- Eliminar la restricción de clave foránea existente
+ALTER TABLE inscripcions
+DROP FOREIGN KEY fk_actividads_inscripciones;
+
+-- Recrear la restricción con ON DELETE CASCADE
+ALTER TABLE inscripcions
+ADD CONSTRAINT fk_actividads_inscripciones
+FOREIGN KEY (id_actividad) 
+REFERENCES actividads(id_actividad)
+ON DELETE CASCADE;
+
 DROP TRIGGER IF EXISTS revisar_cupo_insert;
 DROP TRIGGER IF EXISTS revisar_cupo_update_ins;
 DROP TRIGGER IF EXISTS revisar_cupo_update_act;

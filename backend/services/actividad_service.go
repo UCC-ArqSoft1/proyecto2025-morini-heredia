@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"proyecto-integrador/clients/actividad"
+	"proyecto-integrador/db"
 	"proyecto-integrador/dto"
 	"proyecto-integrador/model"
 	"time"
@@ -28,25 +29,71 @@ func init() {
 	ActividadService = &actividadService{}
 }
 
+func validarCamposBasicos(actividadDTO dto.ActividadDTO) error {
+	if actividadDTO.Cupo == 0 {
+		return fmt.Errorf("el cupo debe ser mayor a 0")
+	}
+
+	if actividadDTO.Titulo == "" {
+		return fmt.Errorf("el título no puede estar vacío")
+	}
+
+	if actividadDTO.Dia == "" {
+		return fmt.Errorf("el día no puede estar vacío")
+	}
+
+	return nil
+}
+
+// Función auxiliar para parsear horas
+func parsearHoras(horaInicio, horaFin string) (time.Time, time.Time, error) {
+	// Obtener la zona horaria local
+	loc, err := time.LoadLocation("America/Argentina/Buenos_Aires")
+	if err != nil {
+		loc = time.Local // Si no se puede cargar, usar la zona horaria local del sistema
+	}
+
+	// Usar una fecha base (2024-01-01) para parsear las horas
+	fechaBase := "2024-01-01"
+	inicio, err := time.ParseInLocation("2006-01-02 15:04", fmt.Sprintf("%s %s", fechaBase, horaInicio), loc)
+	if err != nil {
+		return time.Time{}, time.Time{}, fmt.Errorf("formato de hora inicio inválido (debe ser HH:MM): %v", err)
+	}
+
+	fin, err := time.ParseInLocation("2006-01-02 15:04", fmt.Sprintf("%s %s", fechaBase, horaFin), loc)
+	if err != nil {
+		return time.Time{}, time.Time{}, fmt.Errorf("formato de hora fin inválido (debe ser HH:MM): %v", err)
+	}
+
+	// Validar que hora fin sea después de hora inicio
+	if fin.Before(inicio) {
+		return time.Time{}, time.Time{}, fmt.Errorf("la hora de fin debe ser posterior a la hora de inicio")
+	}
+
+	return inicio, fin, nil
+}
+
+func convertirADTO(v model.ActividadVista) dto.ActividadDTO {
+	return dto.ActividadDTO{
+		Id:          v.Id,
+		Titulo:      v.Titulo,
+		Descripcion: v.Descripcion,
+		Cupo:        v.Cupo,
+		Dia:         v.Dia,
+		HoraInicio:  v.HorarioInicio.Format("15:04"),
+		HoraFin:     v.HorarioFinal.Format("15:04"),
+		Instructor:  v.Instructor,
+		Categoria:   v.Categoria,
+		Lugares:     v.Lugares,
+	}
+}
+
 func (s *actividadService) GetAllActividades() (dto.ActividadesDTO, error) {
 	var actividades model.ActividadesVista = actividad.GetAllActividades()
 	var actividadesDTO dto.ActividadesDTO = make(dto.ActividadesDTO, len(actividades))
 
 	for i, v := range actividades {
-		actividadDTO := dto.ActividadDTO{
-			Id:          v.Id,
-			Titulo:      v.Titulo,
-			Descripcion: v.Descripcion,
-			Cupo:        v.Cupo,
-			Dia:         v.Dia,
-			HoraInicio:  v.HorarioInicio.Format("15:04"),
-			HoraFin:     v.HorarioFinal.Format("15:04"),
-			Instructor:  v.Instructor,
-			Categoria:   v.Categoria,
-			Lugares:     v.Lugares,
-		}
-
-		actividadesDTO[i] = actividadDTO
+		actividadesDTO[i] = convertirADTO(v)
 	}
 
 	return actividadesDTO, nil
@@ -57,19 +104,7 @@ func (s *actividadService) GetActividadesByParams(params map[string]any) (dto.Ac
 	var actividadesDTO dto.ActividadesDTO = make(dto.ActividadesDTO, len(actividades))
 
 	for i, v := range actividades {
-		actividadDTO := dto.ActividadDTO{
-			Id:          v.Id,
-			Titulo:      v.Titulo,
-			Descripcion: v.Descripcion,
-			Cupo:        v.Cupo,
-			Dia:         v.Dia,
-			HoraInicio:  v.HorarioInicio.Format("15:04"),
-			HoraFin:     v.HorarioFinal.Format("15:04"),
-			Instructor:  v.Instructor,
-			Categoria:   v.Categoria,
-		}
-
-		actividadesDTO[i] = actividadDTO
+		actividadesDTO[i] = convertirADTO(v)
 	}
 
 	return actividadesDTO, nil
@@ -81,34 +116,19 @@ func (s *actividadService) GetActividadByID(id int) (dto.ActividadDTO, error) {
 		return dto.ActividadDTO{}, fmt.Errorf("actividad con ID %d no encontrada", id)
 	}
 
-	var actividadDTO dto.ActividadDTO = dto.ActividadDTO{
-		Id:          actividad.Id,
-		Titulo:      actividad.Titulo,
-		Descripcion: actividad.Descripcion,
-		Cupo:        actividad.Cupo,
-		Dia:         actividad.Dia,
-		HoraInicio:  actividad.HorarioInicio.Format("15:04"),
-		HoraFin:     actividad.HorarioFinal.Format("15:04"),
-		Instructor:  actividad.Instructor,
-		Categoria:   actividad.Categoria,
-	}
-
-	return actividadDTO, nil
+	return convertirADTO(actividad), nil
 }
 
 func (s *actividadService) CreateActividad(actividadDTO dto.ActividadDTO) error {
 	log.Printf("Recibiendo DTO para crear actividad: %+v\n", actividadDTO)
 
-	horaInicio, err := time.Parse("15:04", actividadDTO.HoraInicio)
-	if err != nil {
-		log.Printf("Error al parsear hora inicio '%s': %v\n", actividadDTO.HoraInicio, err)
-		return fmt.Errorf("formato de hora inicio inválido: %v", err)
+	if err := validarCamposBasicos(actividadDTO); err != nil {
+		return err
 	}
 
-	horaFin, err := time.Parse("15:04", actividadDTO.HoraFin)
+	horaInicio, horaFin, err := parsearHoras(actividadDTO.HoraInicio, actividadDTO.HoraFin)
 	if err != nil {
-		log.Printf("Error al parsear hora fin '%s': %v\n", actividadDTO.HoraFin, err)
-		return fmt.Errorf("formato de hora fin inválido: %v", err)
+		return err
 	}
 
 	nuevaActividad := model.Actividad{
@@ -116,8 +136,8 @@ func (s *actividadService) CreateActividad(actividadDTO dto.ActividadDTO) error 
 		Descripcion:   actividadDTO.Descripcion,
 		Cupo:          actividadDTO.Cupo,
 		Dia:           actividadDTO.Dia,
-		HorarioInicio: model.CustomTime(horaInicio),
-		HorarioFinal:  model.CustomTime(horaFin),
+		HorarioInicio: horaInicio,
+		HorarioFinal:  horaFin,
 		FotoUrl:       "SAMPLE_URL",
 		Instructor:    actividadDTO.Instructor,
 		Categoria:     actividadDTO.Categoria,
@@ -130,16 +150,25 @@ func (s *actividadService) CreateActividad(actividadDTO dto.ActividadDTO) error 
 func (s *actividadService) UpdateActividad(actividadDTO dto.ActividadDTO) error {
 	log.Printf("Recibiendo DTO para actualizar actividad: %+v\n", actividadDTO)
 
-	horaInicio, err := time.Parse("15:04", actividadDTO.HoraInicio)
-	if err != nil {
-		log.Printf("Error al parsear hora inicio '%s': %v\n", actividadDTO.HoraInicio, err)
-		return fmt.Errorf("formato de hora inicio inválido: %v", err)
+	if err := validarCamposBasicos(actividadDTO); err != nil {
+		return err
 	}
 
-	horaFin, err := time.Parse("15:04", actividadDTO.HoraFin)
+	// Verificar inscripciones actuales antes de actualizar el cupo
+	var inscripcionesActivas int64
+	if err := db.GetInstance().Model(&model.Inscripcion{}).
+		Where("id_actividad = ? AND is_activa = ?", actividadDTO.Id, true).
+		Count(&inscripcionesActivas).Error; err != nil {
+		return fmt.Errorf("error al verificar inscripciones: %v", err)
+	}
+
+	if int64(actividadDTO.Cupo) < inscripcionesActivas {
+		return fmt.Errorf("no se puede reducir el cupo a %d porque hay %d personas inscriptas", actividadDTO.Cupo, inscripcionesActivas)
+	}
+
+	horaInicio, horaFin, err := parsearHoras(actividadDTO.HoraInicio, actividadDTO.HoraFin)
 	if err != nil {
-		log.Printf("Error al parsear hora fin '%s': %v\n", actividadDTO.HoraFin, err)
-		return fmt.Errorf("formato de hora fin inválido: %v", err)
+		return err
 	}
 
 	actividadActualizada := model.Actividad{
@@ -148,15 +177,20 @@ func (s *actividadService) UpdateActividad(actividadDTO dto.ActividadDTO) error 
 		Descripcion:   actividadDTO.Descripcion,
 		Cupo:          actividadDTO.Cupo,
 		Dia:           actividadDTO.Dia,
-		HorarioInicio: model.CustomTime(horaInicio),
-		HorarioFinal:  model.CustomTime(horaFin),
+		HorarioInicio: horaInicio,
+		HorarioFinal:  horaFin,
 		FotoUrl:       "SAMPLE_URL",
 		Instructor:    actividadDTO.Instructor,
 		Categoria:     actividadDTO.Categoria,
 	}
 
 	log.Printf("Actualizando actividad: %+v\n", actividadActualizada)
-	return actividad.UpdateActividad(actividadActualizada)
+	if err := actividad.UpdateActividad(actividadActualizada); err != nil {
+		log.Printf("Error al actualizar actividad en la base de datos: %v\n", err)
+		return fmt.Errorf("error al actualizar actividad: %v", err)
+	}
+
+	return nil
 }
 
 func (s *actividadService) DeleteActividad(id uint) error {

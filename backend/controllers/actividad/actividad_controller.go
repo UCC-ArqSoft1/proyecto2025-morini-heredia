@@ -90,7 +90,14 @@ func UpdateActividad(ctx *gin.Context) {
 
 	var actividadDTO dto.ActividadDTO
 	if err := ctx.BindJSON(&actividadDTO); err != nil {
+		log.Error("Error al parsear JSON:", err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Datos con formato incorrecto"})
+		return
+	}
+
+	// Validar que el ID en la URL coincida con el ID en el body
+	if actividadDTO.Id != 0 && actividadDTO.Id != uint(idActividad) {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "El ID en la URL no coincide con el ID en el body"})
 		return
 	}
 
@@ -98,7 +105,7 @@ func UpdateActividad(ctx *gin.Context) {
 	err = services.ActividadService.UpdateActividad(actividadDTO)
 	if err != nil {
 		log.Error("Error al actualizar actividad:", err)
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Error al actualizar la actividad"})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -121,7 +128,7 @@ func DeleteActividad(ctx *gin.Context) {
 	err = services.ActividadService.DeleteActividad(uint(idActividad))
 	if err != nil {
 		log.Error("Error al eliminar actividad:", err)
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Error al eliminar la actividad"})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 

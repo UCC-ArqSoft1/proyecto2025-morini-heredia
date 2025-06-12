@@ -46,15 +46,15 @@ const AdminPanel = () => {
     };
 
     const handleEliminar = async (actividad) => {
-        if (!actividad.id) {
+        if (!actividad.id_actividad) {
             console.error("Error: La actividad no tiene ID", actividad);
             alert('Error: No se puede eliminar la actividad porque no tiene ID');
             return;
         }
 
-        if (window.confirm('¿Estás seguro de que deseas eliminar esta actividad?')) {
+        if (window.confirm('¿Estás seguro de que deseas eliminar esta actividad? Se eliminarán también todas las inscripciones asociadas.')) {
             try {
-                const response = await fetch(`http://localhost:8080/actividades/${actividad.id}`, {
+                const response = await fetch(`http://localhost:8080/actividades/${actividad.id_actividad}`, {
                     method: 'DELETE',
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
@@ -66,12 +66,12 @@ const AdminPanel = () => {
                     fetchActividades();
                     alert('Actividad eliminada con éxito');
                 } else {
-                    const errorData = await response.json().catch(() => ({}));
-                    alert(errorData.message || 'Error al eliminar la actividad');
+                    const errorData = await response.json();
+                    alert(errorData.error || 'Error al eliminar la actividad');
                 }
             } catch (error) {
                 console.error("Error al eliminar:", error);
-                alert('Error al eliminar la actividad');
+                alert('Error al eliminar la actividad. Por favor, intenta de nuevo más tarde.');
             }
         }
     };
@@ -105,7 +105,7 @@ const AdminPanel = () => {
                     </thead>
                     <tbody>
                         {actividades.map((actividad) => (
-                            <tr key={actividad.id}>
+                            <tr key={actividad.id_actividad}>
                                 <td>{actividad.titulo}</td>
                                 <td>{actividad.descripcion}</td>
                                 <td>{actividad.instructor}</td>
