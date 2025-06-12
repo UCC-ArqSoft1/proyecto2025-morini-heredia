@@ -53,12 +53,6 @@ func GetActividadById(ctx *gin.Context) {
 }
 
 func CreateActividad(ctx *gin.Context) {
-	isAdmin, exists := ctx.Get("is_admin")
-	if !exists || !isAdmin.(bool) {
-		ctx.JSON(http.StatusForbidden, gin.H{"error": "No tienes permisos para realizar esta acción"})
-		return
-	}
-
 	var actividadDTO dto.ActividadDTO
 	if err := ctx.BindJSON(&actividadDTO); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Datos con formato incorrecto"})
@@ -76,12 +70,6 @@ func CreateActividad(ctx *gin.Context) {
 }
 
 func UpdateActividad(ctx *gin.Context) {
-	isAdmin, exists := ctx.Get("is_admin")
-	if !exists || !isAdmin.(bool) {
-		ctx.JSON(http.StatusForbidden, gin.H{"error": "No tienes permisos para realizar esta acción"})
-		return
-	}
-
 	idActividad, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "El id debe ser un número"})
@@ -113,12 +101,6 @@ func UpdateActividad(ctx *gin.Context) {
 }
 
 func DeleteActividad(ctx *gin.Context) {
-	isAdmin, exists := ctx.Get("is_admin")
-	if !exists || !isAdmin.(bool) {
-		ctx.JSON(http.StatusForbidden, gin.H{"error": "No tienes permisos para realizar esta acción"})
-		return
-	}
-
 	idActividad, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "El id debe ser un número"})

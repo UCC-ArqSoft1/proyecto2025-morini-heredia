@@ -66,5 +66,14 @@ func StartDbEngine() {
 	db.AutoMigrate(&model.Actividad{})
 	db.AutoMigrate(&model.Inscripcion{})
 	db.AutoMigrate(&model.Usuario{})
+
+	// creamos una vista de actividades que permita verificar la cantidad de lugares restantes
+	db.Exec(`DROP VIEW IF EXISTS actividads_lugares`)
+	db.Exec(`
+	CREATE VIEW actividads_lugares AS
+	SELECT *, cupo - (SELECT COUNT(*) FROM inscripcions ins WHERE ins.id_actividad = ac.id_actividad AND ins.is_activa) AS lugares
+	FROM actividads ac
+	`)
+
 	log.Info("Terminada la migracion de las tablas")
 }

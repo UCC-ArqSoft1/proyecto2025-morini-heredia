@@ -11,7 +11,7 @@ type Usuario struct {
 	IsAdmin       bool      `gorm:"column:is_admin;default:false;not null"`
 	FechaRegistro time.Time `gorm:"column:fecha_registro;type:timestamp;default:CURRENT_TIMESTAMP;not null"`
 
-	Inscripciones Inscripciones `gorm:"foreignKey:IdUsuario"`
+	Inscripciones Inscripciones `gorm:"foreignKey:IdUsuario;constraint:OnDelete:CASCADE"`
 }
 
 type Usuarios []Usuario

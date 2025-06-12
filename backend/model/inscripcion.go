@@ -8,8 +8,8 @@ type Inscripcion struct {
 	FechaInscripcion time.Time `gorm:"column:fecha_inscripcion;type:timestamp;default:CURRENT_TIMESTAMP;not null"`
 	IsActiva         bool      `gorm:"column:is_activa;default:true;not null"`
 
-	Usuario   Usuario   `gorm:"foreignKey:IdUsuario"`
-	Actividad Actividad `gorm:"foreignKey:IdActividad"`
+	Usuario   Usuario   `gorm:"foreignKey:IdUsuario;constraint:OnDelete:CASCADE"`
+	Actividad Actividad `gorm:"foreignKey:IdActividad;constraint:OnDelete:CASCADE"`
 }
 
 type Inscripciones []Inscripcion

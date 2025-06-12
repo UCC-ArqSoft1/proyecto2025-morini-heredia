@@ -11,7 +11,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func JWTValidation(ctx *gin.Context) {
+func JWTValidationMiddle(ctx *gin.Context) {
 	auth := ctx.GetHeader("Authorization")
 	if auth == "" {
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "debes especificar el header 'Authorization' con tu token"})
@@ -36,6 +36,16 @@ func JWTValidation(ctx *gin.Context) {
 
 	ctx.Set("id_usuario", uint(idUser))
 	ctx.Set("is_admin", isAdmin)
+	ctx.Next()
+}
+
+func IsAdminMiddle(ctx *gin.Context) {
+	isAdmin, exists := ctx.Get("is_admin")
+	if !exists || !isAdmin.(bool) {
+		ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "No tienes permisos para realizar esta acción"})
+		return
+	}
+
 	ctx.Next()
 }
 
