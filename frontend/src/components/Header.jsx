@@ -22,7 +22,7 @@ const Header = ( ) => {
                         <a href="/">Inicio 🏠</a>
                         <a href="/actividades">Actividades 🏋🏽‍♂️</a>
                         {isAdmin && (
-                            <a href="/admin">Panel Admin</a>
+                            <a href="/admin">Panel Admin 👨🏼‍🔧</a>
                         )}
                         {isLoggedIn ? (
                             <button onClick={logout}>Cerrar sesión ✖️</button>
