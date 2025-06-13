@@ -8,6 +8,7 @@ type ActividadDTO struct {
 	Dia         string `json:"dia"`
 	HoraInicio  string `json:"hora_inicio"`
 	HoraFin     string `json:"hora_fin"`
+	FotoUrl     string `json:"foto_url"`
 	Instructor  string `json:"instructor"`
 	Categoria   string `json:"categoria"`
 	Lugares     uint   `json:"lugares"`

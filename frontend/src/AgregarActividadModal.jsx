@@ -9,6 +9,7 @@ const AgregarActividadModal = ({ onClose, onSave }) => {
         dia: '',
         hora_inicio: '',
         hora_fin: '',
+        foto_url: '',
         instructor: '',
         categoria: ''
     });
@@ -218,6 +219,18 @@ const AgregarActividadModal = ({ onClose, onSave }) => {
                             required
                         />
                         {validationErrors.hora_fin && <span className="error-text">{validationErrors.hora_fin}</span>}
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="foto_url">URL de la foto:</label>
+                        <input
+                            type="text"
+                            id="foto_url"
+                            name="foto_url"
+                            value={formData.foto_url}
+                            onChange={handleChange}
+                        />
+                        {validationErrors.foto_url && <span className="error-text">{validationErrors.foto_url}</span>}
                     </div>
 
                     <div className="form-group">

@@ -112,7 +112,7 @@ const AdminPanel = () => {
                                 <td>{actividad.categoria}</td>
                                 <td>{actividad.dia}</td>
                                 <td>{actividad.hora_inicio} - {actividad.hora_fin}</td>
-                                <td>{actividad.cupo}</td>
+                                <td>{actividad.cupo - actividad.lugares} / {actividad.cupo}</td>
                                 <td className="acciones-column">
                                     <button 
                                         className="action-button edit-button"

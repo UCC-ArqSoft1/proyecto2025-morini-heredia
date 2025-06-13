@@ -8,6 +8,7 @@ const Actividades = () => {
     const [actividadesFiltradas, setActividadesFiltradas] = useState([]);
     const [inscripciones, setInscripciones] = useState([]);
     const [actividadEditar, setActividadEditar] = useState(null);
+    const [expandedActividadId, setExpandedActividadId] = useState(null);
     const [filtros, setFiltros] = useState({
         busqueda: "",
         categoria: "",
@@ -210,8 +211,15 @@ const Actividades = () => {
         )
     };
 
+    const toggleExpand = (actividadId) => {
+        setExpandedActividadId(expandedActividadId === actividadId ? null : actividadId);
+    };
+
     return (
         <div className="actividades-container">
+            {expandedActividadId && (
+                <div className="actividades-modal-bg" onClick={() => setExpandedActividadId(null)} />
+            )}
             <div className="filtros-container">
                 <div className="search-wrapper">
                     <span className="search-icon">🔍</span>
@@ -250,20 +258,35 @@ const Actividades = () => {
 
             <div className="actividades-grid">
                 {actividadesFiltradas.map((actividad) => (
-                    <div className="actividad-card" key={actividad.id_actividad}>
+                    <div 
+                        className={`actividad-card ${expandedActividadId === actividad.id_actividad ? 'expanded' : ''}`} 
+                        key={actividad.id_actividad}
+                    >
                         <h3>{actividad.titulo}</h3>
-                        <div className="actividad-info">
-                            <p>{actividad.descripcion}</p>
+                        <div className="actividad-info-basic">
                             <p>Instructor: {actividad.instructor || "No especificado"}</p>
-                            <p>Categoría: {actividad.categoria || "No especificada"}</p>
                             <p>
-                                Día: {actividad.dia || "No especificado"}
-                                <span className="actividad-horario">
-                                    Horario: {actividad.hora_inicio} a {actividad.hora_fin}
-                                </span>
+                                Horario: {actividad.hora_inicio} a {actividad.hora_fin}
                             </p>
-                            <p>Cupo total: {actividad.cupo} | Lugares disponibles: {actividad.lugares}</p>
                         </div>
+
+                        {expandedActividadId === actividad.id_actividad && (
+                            <div className="actividad-info-expanded">
+                                <div className="actividad-imagen">
+                                    <img 
+                                        src={actividad.foto_url || "https://via.placeholder.com/300x200"} 
+                                        alt={actividad.titulo}
+                                    />
+                                </div>
+                                <div className="actividad-detalles">
+                                    <p>{actividad.descripcion}</p>
+                                    <p>Categoría: {actividad.categoria || "No especificada"}</p>
+                                    <p>Día: {actividad.dia || "No especificado"}</p>
+                                    <p><b>Horario:</b> {actividad.hora_inicio} a {actividad.hora_fin}</p>
+                                    <p>Cupo total: {actividad.cupo} | Lugares disponibles: {actividad.lugares}</p>
+                                </div>
+                            </div>
+                        )}
 
                         {isLoggedIn && (
                             <div className="card-actions">
@@ -287,16 +310,24 @@ const Actividades = () => {
                                         </button>
                                     </>
                                 ) : (
-                                    <button
-                                        className="inscripcion-button"
-                                        onClick={() => 
-                                            estaInscripto(actividad.id_actividad) ? 
-                                                handleUnenrolling(actividad.id_actividad) :
-                                                handleEnroling(actividad.id_actividad)
-                                        }
-                                    >
-                                        {estaInscripto(actividad.id_actividad) ? "Desinscribir ❌" : "Inscribir ✔️"}
-                                    </button>
+                                    <>
+                                        <button
+                                            className="inscripcion-button"
+                                            onClick={() => 
+                                                estaInscripto(actividad.id_actividad) ? 
+                                                    handleUnenrolling(actividad.id_actividad) :
+                                                    handleEnroling(actividad.id_actividad)
+                                            }
+                                        >
+                                            {estaInscripto(actividad.id_actividad) ? "Desinscribir ❌" : "Inscribir ✔️"}
+                                        </button>
+                                        <button
+                                            className="ver-mas-button"
+                                            onClick={() => toggleExpand(actividad.id_actividad)}
+                                        >
+                                            {expandedActividadId === actividad.id_actividad ? "Ver menos 🔼" : "Ver más 🔽"}
+                                        </button>
+                                    </>
                                 )}
                             </div>
                         )}

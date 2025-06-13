@@ -27,6 +27,7 @@ const EditarActividadModal = ({ actividad, onClose, onSave }) => {
                 dia: actividad.dia || '',
                 hora_inicio: actividad.hora_inicio || '',
                 hora_fin: actividad.hora_fin || '',
+                foto_url: actividad.foto_url || '',
                 instructor: actividad.instructor || '',
                 categoria: actividad.categoria || ''
             };
@@ -151,7 +152,7 @@ const EditarActividadModal = ({ actividad, onClose, onSave }) => {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="cupo">Cupo:</label>
+                        <label htmlFor="cupo">Cupo: ({actividad.cupo - actividad.lugares} inscriptos)</label>
                         <input
                             type="number"
                             id="cupo"
@@ -208,6 +209,18 @@ const EditarActividadModal = ({ actividad, onClose, onSave }) => {
                             required
                         />
                         {validationErrors.hora_fin && <span className="error-text">{validationErrors.hora_fin}</span>}
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="foto_url">URL de la foto:</label>
+                        <input
+                            type="text"
+                            id="foto_url"
+                            name="foto_url"
+                            value={formData.foto_url}
+                            onChange={handleChange}
+                        />
+                        {validationErrors.foto_url && <span className="error-text">{validationErrors.foto_url}</span>}
                     </div>
 
                     <div className="form-group">

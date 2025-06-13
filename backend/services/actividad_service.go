@@ -82,6 +82,7 @@ func convertirADTO(v model.ActividadVista) dto.ActividadDTO {
 		Dia:         v.Dia,
 		HoraInicio:  v.HorarioInicio.Format("15:04"),
 		HoraFin:     v.HorarioFinal.Format("15:04"),
+		FotoUrl:     v.FotoUrl,
 		Instructor:  v.Instructor,
 		Categoria:   v.Categoria,
 		Lugares:     v.Lugares,
@@ -138,7 +139,7 @@ func (s *actividadService) CreateActividad(actividadDTO dto.ActividadDTO) error 
 		Dia:           actividadDTO.Dia,
 		HorarioInicio: horaInicio,
 		HorarioFinal:  horaFin,
-		FotoUrl:       "SAMPLE_URL",
+		FotoUrl:       actividadDTO.FotoUrl,
 		Instructor:    actividadDTO.Instructor,
 		Categoria:     actividadDTO.Categoria,
 	}
@@ -179,7 +180,7 @@ func (s *actividadService) UpdateActividad(actividadDTO dto.ActividadDTO) error 
 		Dia:           actividadDTO.Dia,
 		HorarioInicio: horaInicio,
 		HorarioFinal:  horaFin,
-		FotoUrl:       "SAMPLE_URL",
+		FotoUrl:       actividadDTO.FotoUrl,
 		Instructor:    actividadDTO.Instructor,
 		Categoria:     actividadDTO.Categoria,
 	}
