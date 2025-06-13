@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './EditarActividadModal.css';
+import '../styles/EditarActividadModal.css';
 
 const EditarActividadModal = ({ actividad, onClose, onSave }) => {
     const [formData, setFormData] = useState({

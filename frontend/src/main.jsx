@@ -1,11 +1,11 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './index.css'
-import Login from './Login.jsx'
-import Actividades from './Actividades.jsx'
+import './styles/index.css'
+import Login from './pages/Login.jsx'
+import Actividades from './pages/Actividades.jsx'
+import AdminPanel from './pages/AdminPanel.jsx'
 import Layout from './Layout.jsx'
 import Home from './Home.jsx'
-import AdminPanel from './AdminPanel.jsx'
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 createRoot(document.getElementById('root')).render(

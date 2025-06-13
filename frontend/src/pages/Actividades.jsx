@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import EditarActividadModal from './EditarActividadModal';
-import "./Actividades.css";
+import EditarActividadModal from '../components/EditarActividadModal';
+import "../styles/Actividades.css";
 import { useNavigate } from "react-router-dom";
 
 const Actividades = () => {
