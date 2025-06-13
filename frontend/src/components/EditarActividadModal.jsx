@@ -181,6 +181,7 @@ const EditarActividadModal = ({ actividad, onClose, onSave }) => {
                             <option value="Jueves">Jueves</option>
                             <option value="Viernes">Viernes</option>
                             <option value="Sabado">Sabado</option>
+                            <option value="Domingo">Domingo</option>
                         </select>
                         {validationErrors.dia && <span className="error-text">{validationErrors.dia}</span>}
                     </div>
