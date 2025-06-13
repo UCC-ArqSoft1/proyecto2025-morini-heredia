@@ -257,82 +257,88 @@ const Actividades = () => {
             </div>
 
             <div className="actividades-grid">
-                {actividadesFiltradas.map((actividad) => (
-                    <div 
-                        className={`actividad-card ${expandedActividadId === actividad.id_actividad ? 'expanded' : ''}`} 
-                        key={actividad.id_actividad}
-                    >
-                        <h3>{actividad.titulo}</h3>
-                        <div className="actividad-info-basic">
-                            <p>Instructor: {actividad.instructor || "No especificado"}</p>
-                            <p>
-                                Horario: {actividad.hora_inicio} a {actividad.hora_fin}
-                            </p>
-                        </div>
-
-                        {expandedActividadId === actividad.id_actividad && (
-                            <div className="actividad-info-expanded">
-                                <div className="actividad-imagen">
-                                    <img 
-                                        src={actividad.foto_url || "https://via.placeholder.com/300x200"} 
-                                        alt={actividad.titulo}
-                                    />
-                                </div>
-                                <div className="actividad-detalles">
-                                    <p>{actividad.descripcion}</p>
-                                    <p>Categoría: {actividad.categoria || "No especificada"}</p>
-                                    <p>Día: {actividad.dia || "No especificado"}</p>
-                                    <p><b>Horario:</b> {actividad.hora_inicio} a {actividad.hora_fin}</p>
-                                    <p>Cupo total: {actividad.cupo} | Lugares disponibles: {actividad.lugares}</p>
-                                </div>
-                            </div>
-                        )}
-
-                        {isLoggedIn && (
-                            <div className="card-actions">
-                                {isAdmin ? (
-                                    <>
-                                        <button
-                                            className="action-button edit-button"
-                                            onClick={() => handleEditar(actividad)}
-                                            title="Editar"
-                                        >
-                                            <span>✏️</span>
-                                            Editar
-                                        </button>
-                                        <button
-                                            className="action-button delete-button"
-                                            onClick={() => handleEliminar(actividad)}
-                                            title="Eliminar"
-                                        >
-                                            <span>🗑️</span>
-                                            Eliminar
-                                        </button>
-                                    </>
-                                ) : (
-                                    <>
-                                        <button
-                                            className="inscripcion-button"
-                                            onClick={() => 
-                                                estaInscripto(actividad.id_actividad) ? 
-                                                    handleUnenrolling(actividad.id_actividad) :
-                                                    handleEnroling(actividad.id_actividad)
-                                            }
-                                        >
-                                            {estaInscripto(actividad.id_actividad) ? "Desinscribir ❌" : "Inscribir ✔️"}
-                                        </button>
-                                        <button
-                                            className="ver-mas-button"
-                                            onClick={() => toggleExpand(actividad.id_actividad)}
-                                        >
-                                            {expandedActividadId === actividad.id_actividad ? "Ver menos 🔼" : "Ver más 🔽"}
-                                        </button>
-                                    </>
-                                )}
-                            </div>
-                        )}
+                {actividadesFiltradas.length === 0 ? (
+                    <div className="mensaje-no-actividades">
+                        No se encontraron actividades.
                     </div>
-                ))}
+                ) : (
+                    actividadesFiltradas.map((actividad) => (
+                        <div 
+                            className={`actividad-card ${expandedActividadId === actividad.id_actividad ? 'expanded' : ''}`} 
+                            key={actividad.id_actividad}
+                        >
+                            <h3>{actividad.titulo}</h3>
+                            <div className="actividad-info-basic">
+                                <p>Instructor: {actividad.instructor || "No especificado"}</p>
+                                <p>
+                                    Horario: {actividad.hora_inicio} a {actividad.hora_fin}
+                                </p>
+                            </div>
+
+                            {expandedActividadId === actividad.id_actividad && (
+                                <div className="actividad-info-expanded">
+                                    <div className="actividad-imagen">
+                                        <img 
+                                            src={actividad.foto_url || "https://via.placeholder.com/300x200"} 
+                                            alt={actividad.titulo}
+                                        />
+                                    </div>
+                                    <div className="actividad-detalles">
+                                        <p>{actividad.descripcion}</p>
+                                        <p>Categoría: {actividad.categoria || "No especificada"}</p>
+                                        <p>Día: {actividad.dia || "No especificado"}</p>
+                                        <p><b>Horario:</b> {actividad.hora_inicio} a {actividad.hora_fin}</p>
+                                        <p>Cupo total: {actividad.cupo} | Lugares disponibles: {actividad.lugares}</p>
+                                    </div>
+                                </div>
+                            )}
+
+                            {isLoggedIn && (
+                                <div className="card-actions">
+                                    {isAdmin ? (
+                                        <>
+                                            <button
+                                                className="action-button edit-button"
+                                                onClick={() => handleEditar(actividad)}
+                                                title="Editar"
+                                            >
+                                                <span>✏️</span>
+                                                Editar
+                                            </button>
+                                            <button
+                                                className="action-button delete-button"
+                                                onClick={() => handleEliminar(actividad)}
+                                                title="Eliminar"
+                                            >
+                                                <span>🗑️</span>
+                                                Eliminar
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <button
+                                                className="inscripcion-button"
+                                                onClick={() => 
+                                                    estaInscripto(actividad.id_actividad) ? 
+                                                        handleUnenrolling(actividad.id_actividad) :
+                                                        handleEnroling(actividad.id_actividad)
+                                                }
+                                            >
+                                                {estaInscripto(actividad.id_actividad) ? "Desinscribir ❌" : "Inscribir ✔️"}
+                                            </button>
+                                            <button
+                                                className="ver-mas-button"
+                                                onClick={() => toggleExpand(actividad.id_actividad)}
+                                            >
+                                                {expandedActividadId === actividad.id_actividad ? "Ver menos 🔼" : "Ver más 🔽"}
+                                            </button>
+                                        </>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    ))
+                )}
             </div>
 
             {actividadEditar && (
