@@ -10,6 +10,7 @@ const EditarActividadModal = ({ actividad, onClose, onSave }) => {
         dia: '',
         hora_inicio: '',
         hora_fin: '',
+        foto_url: '',
         instructor: '',
         categoria: ''
     });

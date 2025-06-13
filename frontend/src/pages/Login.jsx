@@ -74,7 +74,7 @@ const Login = () => {
     return (
         <div className="login-container">
             <button onClick={handleBack} className="back-button">
-                ← Volver
+                ← Inicio
             </button>
             <form className="login-form" onSubmit={handlerLogin}>
                 <h2>Iniciar Sesión</h2>

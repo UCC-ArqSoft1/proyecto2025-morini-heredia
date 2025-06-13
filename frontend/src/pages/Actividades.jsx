@@ -262,8 +262,9 @@ const Actividades = () => {
                     <option value="Jueves">Jueves</option>
                     <option value="Viernes">Viernes</option>
                     <option value="Sabado">Sabado</option>
+                    <option value="Domingo">Domingo</option>
                 </select>
-                {isLoggedIn && (
+                {isLoggedIn && !isAdmin && (
                     <div className="toggle-wrapper">
                         <label className="toggle-label">
                             <input

@@ -1,5 +1,6 @@
 import '../styles/Home.css'
-import gymPortada from '../assets/home/maxresdefault.jpg'
+// import gymPortada from '../assets/home/maxresdefault.jpg'
+import gymPortada from '../assets/login/gimnasio1.jpeg'
 import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
