@@ -12,12 +12,12 @@ const Actividades = () => {
     const [filtros, setFiltros] = useState({
         busqueda: "",
         categoria: "",
-        dia: ""
+        dia: "",
+        soloInscripto: false
     });
     const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
     const isAdmin = localStorage.getItem("isAdmin") === "true";
     const navigate = useNavigate();
-    // const idUsuario = parseInt(localStorage.getItem("idUsuario"))
 
     useEffect(() => {
         fetchActividades();
@@ -92,6 +92,14 @@ const Actividades = () => {
         if (filtros.dia) {
             actividadesFiltradas = actividadesFiltradas.filter(actividad =>
                 actividad.dia.toLowerCase() === filtros.dia.toLowerCase()
+            );
+        }
+
+        // Filtrar solo inscripto
+        if (filtros.soloInscripto) {
+            const idsInscripto = inscripciones.filter(insc => insc.is_activa).map(insc => insc.id_actividad);
+            actividadesFiltradas = actividadesFiltradas.filter(actividad =>
+                idsInscripto.includes(actividad.id_actividad)
             );
         }
 
@@ -254,6 +262,24 @@ const Actividades = () => {
                     <option value="Viernes">Viernes</option>
                     <option value="Sabado">Sabado</option>
                 </select>
+                {isLoggedIn && (
+                    <div className="toggle-wrapper">
+                        <label className="toggle-label">
+                            <input
+                                type="checkbox"
+                                name="soloInscripto"
+                                checked={filtros.soloInscripto}
+                                onChange={(e) => setFiltros(prev => ({
+                                    ...prev,
+                                    soloInscripto: e.target.checked
+                                }))}
+                                className="toggle-input"
+                            />
+                            <span className="toggle-slider"></span>
+                            <span className="toggle-text">Solo inscriptas</span>
+                        </label>
+                    </div>
+                )}
             </div>
 
             <div className="actividades-grid">
