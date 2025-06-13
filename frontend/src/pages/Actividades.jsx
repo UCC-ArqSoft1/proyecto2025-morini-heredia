@@ -298,7 +298,7 @@ const Actividades = () => {
                                     {isAdmin ? (
                                         <>
                                             <button
-                                                className="action-button edit-button"
+                                                className="edit-button"
                                                 onClick={() => handleEditar(actividad)}
                                                 title="Editar"
                                             >
@@ -306,7 +306,7 @@ const Actividades = () => {
                                                 Editar
                                             </button>
                                             <button
-                                                className="action-button delete-button"
+                                                className="delete-button"
                                                 onClick={() => handleEliminar(actividad)}
                                                 title="Eliminar"
                                             >
@@ -326,14 +326,14 @@ const Actividades = () => {
                                             >
                                                 {estaInscripto(actividad.id_actividad) ? "Desinscribir ❌" : "Inscribir ✔️"}
                                             </button>
-                                            <button
-                                                className="ver-mas-button"
-                                                onClick={() => toggleExpand(actividad.id_actividad)}
-                                            >
-                                                {expandedActividadId === actividad.id_actividad ? "Ver menos 🔼" : "Ver más 🔽"}
-                                            </button>
                                         </>
                                     )}
+                                    <button
+                                        className="ver-mas-button"
+                                        onClick={() => toggleExpand(actividad.id_actividad)}
+                                    >
+                                        {expandedActividadId === actividad.id_actividad ? "Ver menos 🔼" : "Ver más 🔽"}
+                                    </button>
                                 </div>
                             )}
                         </div>

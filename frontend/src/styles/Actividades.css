@@ -134,23 +134,35 @@
 }
 
 .edit-button {
-    background-color: rgba(76, 175, 80, 0.1);
-    color: #000000;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 8px 16px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
 }
 
 .edit-button:hover {
-    background-color: rgba(76, 175, 80, 0.1);
-    color: #4CAF50;
+    background-color: #388e3c;
 }
 
 .delete-button {
-    background-color: rgba(244, 67, 54, 0.1);
-    color: #000000;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 8px 16px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
 }
 
 .delete-button:hover {
-    background-color: rgba(244, 67, 54, 0.1);
-    color: #f44336;
+    background-color: #b71c1c;
 }
 
 .filtros-container {

@@ -95,8 +95,7 @@ const AgregarActividadModal = ({ onClose, onSave }) => {
                 cupo: parseInt(formData.cupo, 10),
                 dia: formData.dia.normalize("NFD").replace(/[\u0300-\u036f]/g, ""), // Eliminar acentos
                 hora_inicio: formData.hora_inicio,
-                hora_fin: formData.hora_fin,
-                foto_url: "SAMPLE_URL" // Campo requerido por el backend
+                hora_fin: formData.hora_fin
             };
 
             const response = await fetch('http://localhost:8080/actividades', {
