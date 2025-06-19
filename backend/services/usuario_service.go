@@ -1,11 +1,13 @@
 package services
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"errors"
 	"os"
 	"proyecto-integrador/clients/usuario"
+	"proyecto-integrador/dto"
 	"proyecto-integrador/model"
-	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -17,6 +19,7 @@ type usuarioService struct{}
 type IUsuarioService interface {
 	GenerateToken(username string, password string) (string, error)
 	GetClaimsFromToken(tokenString string) (jwt.MapClaims, error)
+	RegisterUser(datos dto.UsuarioMinDTO) error
 }
 
 var (
@@ -32,10 +35,15 @@ func init() {
 	jwtSecret = os.Getenv("JWT_SECRET")
 }
 
+func calculateSHA256(input string) string {
+	hash := sha256.Sum256([]byte(input))
+	return hex.EncodeToString(hash[:])
+}
+
 func (us *usuarioService) GenerateToken(username string, password string) (string, error) {
 	var userdata model.Usuario = usuario.GetUsuarioByUsername(username)
 
-	if strings.ToLower(password) != userdata.Password {
+	if calculateSHA256(password) != userdata.Password {
 		log.Debugf("Contraseña incorrecta para el usuario %s@%s\n", username, password)
 		return "", IncorrectCredentialsError
 	}
@@ -69,4 +77,14 @@ func (us *usuarioService) GetClaimsFromToken(tokenString string) (jwt.MapClaims,
 	}
 
 	return claims, nil
+}
+
+func (us *usuarioService) RegisterUser(datos dto.UsuarioMinDTO) error {
+	var newUser model.Usuario = model.Usuario{
+		Nombre:   datos.Nombre,
+		Apellido: datos.Apellido,
+		Username: datos.Username,
+		Password: calculateSHA256(datos.Password),
+	}
+	return usuario.RegisterUser(newUser)
 }

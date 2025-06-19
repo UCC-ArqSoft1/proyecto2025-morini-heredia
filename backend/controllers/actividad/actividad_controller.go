@@ -19,10 +19,10 @@ func GetActividadesByParams(ctx *gin.Context) {
 		"categoria": ctx.Query("categoria")},
 	)
 	if err != nil {
-		ctx.JSON(500, gin.H{"error": "Error al buscar actividades"})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Error al buscar actividades"})
 	}
 
-	ctx.JSON(200, actividades)
+	ctx.JSON(http.StatusOK, actividades)
 }
 
 func GetAllActividades(ctx *gin.Context) {
@@ -45,7 +45,7 @@ func GetActividadById(ctx *gin.Context) {
 	actividad, err := services.ActividadService.GetActividadByID(id_actividad)
 	if err != nil {
 		log.Error("Error al buscar actividad:", err)
-		ctx.JSON(404, gin.H{"error": "La actividad no existe"})
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "La actividad no existe"})
 		return
 	}
 

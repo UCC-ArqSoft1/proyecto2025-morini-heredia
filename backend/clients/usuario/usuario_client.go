@@ -15,3 +15,8 @@ func GetUsuarioByUsername(username string) model.Usuario {
 
 	return usuario
 }
+
+func RegisterUser(newUser model.Usuario) error {
+	log.Debugf("Registrando usuario con datos: %v", newUser)
+	return db.GetInstance().Create(&newUser).Error
+}

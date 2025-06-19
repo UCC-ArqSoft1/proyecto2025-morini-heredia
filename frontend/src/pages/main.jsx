@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import '../styles/index.css'
 import Login from '../pages/Login.jsx'
+import Register from '../pages/Register.jsx'
 import Actividades from '../pages/Actividades.jsx'
 import AdminPanel from '../pages/AdminPanel.jsx'
 import Layout from '../components/Layout.jsx'
@@ -13,6 +14,7 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="actividades" element={<Actividades />} />

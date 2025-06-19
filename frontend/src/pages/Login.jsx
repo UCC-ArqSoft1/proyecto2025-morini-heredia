@@ -9,13 +9,16 @@ const getTokenPayload = (token) => {
     return JSON.parse(decodedPaylod);
 }
 
-const sha256 = async (text) => {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(text);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
+const storeUserSession = (accessToken) => {
+    const payload = getTokenPayload(accessToken)
+    const admin = payload.is_admin;
+    const idUsuario = payload.id_usuario
+
+    localStorage.setItem("access_token", accessToken);
+    localStorage.setItem("idUsuario", parseInt(idUsuario));
+    localStorage.setItem("isAdmin", admin.toString());
+    localStorage.setItem("isLoggedIn", "true");
+};
 
 const Login = () => {
     const [username, setUsername] = useState("");
@@ -37,22 +40,15 @@ const Login = () => {
                 },
                 body: JSON.stringify({
                     username: username.trim(),
-                    password: await sha256(password)
+                    password: password
                 })
             });
 
             if (response.ok) {
                 const data = await response.json();
-                const payload = getTokenPayload(data.access_token)
-                const admin = payload.is_admin;
-                const idUsuario = payload.id_usuario
-
-                localStorage.setItem("access_token", data.access_token);
-                localStorage.setItem("idUsuario", parseInt(idUsuario));
-                localStorage.setItem("isAdmin", admin.toString());
-                localStorage.setItem("isLoggedIn", "true");
-
-                navigate("/actividades");
+                storeUserSession(data.access_token)
+                
+                navigate("/");
             } else {
                 const errorData = await response.json();
                 setError(errorData.error || "Error de autenticación");
@@ -106,9 +102,14 @@ const Login = () => {
                 <button type="submit" disabled={isLoading}>
                     {isLoading ? "Ingresando..." : "Ingresar"}
                 </button>
+
+                <div className="register-link">
+                    ¿No tienes una cuenta? <a href="/register">Regístrate ahora</a>
+                </div>
             </form>
         </div>
     );
 };
 
+export { storeUserSession };
 export default Login;

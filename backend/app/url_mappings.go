@@ -17,6 +17,7 @@ func MapURLs() {
 
 	// usuarios
 	router.POST("/login", usuario.Login)
+	router.POST("/register", usuario.Register)
 
 	// inscripciones
 	router.GET("/inscripciones", JWTValidationMiddle, inscripcion.GetAllInscripciones)

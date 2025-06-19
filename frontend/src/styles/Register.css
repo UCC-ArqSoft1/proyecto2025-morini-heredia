@@ -1,4 +1,4 @@
-.login-container {
+.register-container {
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -34,7 +34,7 @@
     color: #4CAF50;
 }
 
-.login-form {
+.register-form {
     background: rgba(20, 20, 20, 0.92);
     padding: 48px 40px 40px 40px;
     border-radius: 12px;
@@ -47,7 +47,7 @@
     z-index: 1;
 }
 
-.login-form h2 {
+.register-form h2 {
     margin-bottom: 30px;
     color: #fff;
     font-size: 28px;
@@ -60,7 +60,7 @@
     width: 100%;
 }
 
-.login-form input {
+.register-form input {
     width: 100%;
     padding: 14px 12px;
     border: 1px solid #333;
@@ -73,7 +73,7 @@
     transition: border 0.2s, box-shadow 0.2s;
 }
 
-.login-form input:focus {
+.register-form input:focus {
     border-color: #4CAF50;
     outline: none;
     box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.18);
@@ -81,7 +81,7 @@
     color: #fff;
 }
 
-.login-form button {
+.register-form button {
     width: 100%;
     padding: 14px 20px;
     background-color: #4CAF50;
@@ -95,7 +95,7 @@
     margin-top: 10px;
 }
 
-.login-form button:hover {
+.register-form button:hover {
     background-color: #388e3c;
 }
 
@@ -106,26 +106,26 @@
     font-weight: 500;
 }
 
-.register-link {
+.login-link {
     text-align: center;
     margin-top: 20px;
     color: #fff;
     font-size: 15px;
 }
 
-.register-link a {
+.login-link a {
     color: #4CAF50;
     text-decoration: none;
     font-weight: 600;
     margin-left: 5px;
 }
 
-.register-link a:hover {
+.login-link a:hover {
     text-decoration: underline;
 }
 
 @media (max-width: 900px) {
-    .login-form {
+    .register-form {
         margin-left: 2vw;
         padding: 32px 18px 28px 18px;
     }
@@ -136,14 +136,14 @@
 }
 
 @media (max-width: 600px) {
-    .login-container {
+    .register-container {
         justify-content: center;
         align-items: flex-start;
         background-position: center right;
     }
-    .login-form {
+    .register-form {
         margin: 32px 0 0 0;
         max-width: 98vw;
         padding: 18px 6px 18px 6px;
     }
-}
+} 
