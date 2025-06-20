@@ -42,7 +42,9 @@ func AltaDeInscripcion(id_usuario, id_actividad uint) error {
 			return errors.New("El usuario ya esta inscripto")
 		}
 
-		return db.GetInstance().Model(&insc).Update("is_activa", true).Error
+		insc.IsActiva = true
+		return db.GetInstance().Model(&insc).
+			Update("is_activa", true).Error
 	}
 
 	return nil
@@ -50,5 +52,9 @@ func AltaDeInscripcion(id_usuario, id_actividad uint) error {
 
 func BajaDeInscripcion(id_usuario, id_actividad uint) error {
 	// hacemos una consulta tipo UPDATE a la base de datos
-	return db.GetInstance().Model(&model.Inscripcion{}).Where("id_usuario = ? AND id_actividad = ?", id_usuario, id_actividad).Update("is_activa", false).Error
+	return db.GetInstance().Model(&model.Inscripcion{
+		IdUsuario:   id_usuario,
+		IdActividad: id_actividad}).
+		Update("is_activa", false).
+		Where("id_usuario = ? AND id_actividad = ?", id_usuario, id_actividad).Error
 }

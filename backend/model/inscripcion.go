@@ -23,20 +23,15 @@ type Inscripciones []Inscripcion
 func (ins *Inscripcion) BeforeCreate(tx *gorm.DB) (err error) {
 	var lugares int64
 
-	err = tx.Model(&Inscripcion{}).
-		Where("id_actividad = ? AND is_activa = ?", ins.IdActividad, true).
-		Count(&lugares).Error
+	err = tx.Model(&ActividadVista{}).
+		Select("lugares").
+		Where("id_actividad = ?", ins.IdActividad).
+		First(&lugares).Error
 	if err != nil {
 		return err
 	}
 
-	var actividad Actividad
-	err = tx.First(&actividad, ins.IdActividad).Error
-	if err != nil {
-		return err
-	}
-
-	if lugares >= int64(actividad.Cupo) {
+	if lugares <= 0 {
 		return fmt.Errorf("No se puede inscribir, el cupo de la actividad ha sido alcanzado.")
 	}
 
@@ -45,18 +40,20 @@ func (ins *Inscripcion) BeforeCreate(tx *gorm.DB) (err error) {
 
 // verificación antes de hacer UPDATE: antes de activar una ins. verificamos que haya cupo
 func (ins *Inscripcion) BeforeUpdate(tx *gorm.DB) (err error) {
-	var lugares int64
+	if ins.IsActiva {
+		var lugares int64
 
-	err = tx.Model(&Inscripcion{}).
-		Where("id_actividad = ? AND is_activa = ?", ins.IdActividad, true).
-		Count(&lugares).Error
-	if err != nil {
-		return err
-	}
+		err = tx.Model(&ActividadVista{}).
+			Select("lugares").
+			Where("id_actividad = ?", ins.IdActividad).
+			First(&lugares).Error
+		if err != nil {
+			return err
+		}
 
-	// tiene que haber por lo menos un lugar para activar la inscripcion
-	if lugares < 1 && ins.IsActiva {
-		return fmt.Errorf("No se puede activar la inscripcion, el cupo de la actividad ha sido alcanzado.")
+		if lugares <= 0 {
+			return fmt.Errorf("No se puede inscribir, el cupo de la actividad ha sido alcanzado.")
+		}
 	}
 
 	return nil

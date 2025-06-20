@@ -5,6 +5,7 @@ import (
 	"proyecto-integrador/dto"
 	"proyecto-integrador/services"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 
@@ -92,7 +93,11 @@ func UpdateActividad(ctx *gin.Context) {
 	actividadDTO.Id = uint(idActividad)
 	err = services.ActividadService.UpdateActividad(actividadDTO)
 	if err != nil {
-		log.Error("Error al actualizar actividad:", err)
+		errString := err.Error()
+
+		if strings.Contains(errString, "inscripciones activas que superan el nuevo límite") {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		}
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -109,7 +114,6 @@ func DeleteActividad(ctx *gin.Context) {
 
 	err = services.ActividadService.DeleteActividad(uint(idActividad))
 	if err != nil {
-		log.Error("Error al eliminar actividad:", err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

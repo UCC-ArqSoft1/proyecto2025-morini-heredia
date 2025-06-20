@@ -2,12 +2,12 @@ package services
 
 import (
 	"fmt"
-	"log"
 	"proyecto-integrador/clients/actividad"
-	"proyecto-integrador/db"
 	"proyecto-integrador/dto"
 	"proyecto-integrador/model"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type actividadService struct{}
@@ -155,18 +155,6 @@ func (s *actividadService) UpdateActividad(actividadDTO dto.ActividadDTO) error 
 		return err
 	}
 
-	// Verificar inscripciones actuales antes de actualizar el cupo
-	var inscripcionesActivas int64
-	if err := db.GetInstance().Model(&model.Inscripcion{}).
-		Where("id_actividad = ? AND is_activa = ?", actividadDTO.Id, true).
-		Count(&inscripcionesActivas).Error; err != nil {
-		return fmt.Errorf("error al verificar inscripciones: %v", err)
-	}
-
-	if int64(actividadDTO.Cupo) < inscripcionesActivas {
-		return fmt.Errorf("no se puede reducir el cupo a %d porque hay %d personas inscriptas", actividadDTO.Cupo, inscripcionesActivas)
-	}
-
 	horaInicio, horaFin, err := parsearHoras(actividadDTO.HoraInicio, actividadDTO.HoraFin)
 	if err != nil {
 		return err
@@ -185,9 +173,8 @@ func (s *actividadService) UpdateActividad(actividadDTO dto.ActividadDTO) error 
 		Categoria:     actividadDTO.Categoria,
 	}
 
-	log.Printf("Actualizando actividad: %+v\n", actividadActualizada)
+	log.Infof("Actualizando actividad: %+v\n", actividadActualizada)
 	if err := actividad.UpdateActividad(actividadActualizada); err != nil {
-		log.Printf("Error al actualizar actividad en la base de datos: %v\n", err)
 		return fmt.Errorf("error al actualizar actividad: %v", err)
 	}
 

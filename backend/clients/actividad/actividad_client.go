@@ -63,25 +63,8 @@ func CreateActividad(actividad model.Actividad) error {
 }
 
 func UpdateActividad(actividad model.Actividad) error {
-	// Primero verificamos si la actividad existe
-	var existingActividad model.Actividad
-	if err := db.GetInstance().First(&existingActividad, actividad.Id).Error; err != nil {
-		log.Error("Error al buscar actividad:", err)
-		return fmt.Errorf("no se encontró la actividad con ID %d", actividad.Id)
-	}
-
-	// Actualizamos los campos de la actividad
-	result := db.GetInstance().Model(&existingActividad).Updates(map[string]interface{}{
-		"titulo":         actividad.Titulo,
-		"descripcion":    actividad.Descripcion,
-		"cupo":           actividad.Cupo,
-		"dia":            actividad.Dia,
-		"horario_inicio": actividad.HorarioInicio,
-		"horario_final":  actividad.HorarioFinal,
-		"foto_url":       actividad.FotoUrl,
-		"instructor":     actividad.Instructor,
-		"categoria":      actividad.Categoria,
-	})
+	result := db.GetInstance().Model(&model.Actividad{Id: actividad.Id, Cupo: actividad.Cupo}).
+		Updates(&actividad)
 
 	if result.Error != nil {
 		log.Error("Error al actualizar actividad:", result.Error)
@@ -98,6 +81,7 @@ func DeleteActividad(id uint) error {
 		return result.Error
 	}
 	if result.RowsAffected == 0 {
+		log.Error("Error al eliminar actividad: no se encontro actividad con ID ", id)
 		return fmt.Errorf("no se encontró la actividad con ID %d", id)
 	}
 	return nil

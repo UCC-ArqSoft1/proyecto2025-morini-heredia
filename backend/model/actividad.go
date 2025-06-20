@@ -26,16 +26,16 @@ type Actividades []Actividad
 
 // verificación antes de hacer UPDATE: validamos que el cupo sea >= a la cantidad de inscriptos
 func (ac *Actividad) BeforeUpdate(tx *gorm.DB) (err error) {
-	var lugares int64
+	var insc_activas int64
 
 	err = tx.Model(&Inscripcion{}).
 		Where("id_actividad = ? AND is_activa = ?", ac.Id, true).
-		Count(&lugares).Error
+		Count(&insc_activas).Error
 	if err != nil {
 		return err
 	}
 
-	if ac.Cupo < uint(lugares) {
+	if ac.Cupo < uint(insc_activas) {
 		return fmt.Errorf("No se puede cambiar el cupo, hay inscripciones activas que superan el nuevo límite.")
 	}
 
