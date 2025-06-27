@@ -97,8 +97,9 @@ func UpdateActividad(ctx *gin.Context) {
 
 		if strings.Contains(errString, "inscripciones activas que superan el nuevo límite") {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		} else {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		}
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 

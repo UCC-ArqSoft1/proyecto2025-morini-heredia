@@ -19,7 +19,7 @@ func GetActividadesByParams(params map[string]any) model.ActividadesVista {
 		query = query.Where("titulo LIKE ?", fmt.Sprintf("%%%s%%", params["titulo"]))
 	}
 	if params["horario"] != "" {
-		query = query.Where("TIME(horario) = ?", params["horario"])
+		query = query.Where("TIME(?) BETWEEN TIME(horario_inicio) AND TIME(horario_final)", params["horario"])
 	}
 	if params["categoria"] != "" {
 		query = query.Where("categoria LIKE ?", fmt.Sprintf("%%%s%%", params["categoria"]))
